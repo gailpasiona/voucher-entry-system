@@ -28,6 +28,9 @@ class UserController extends BaseController {
     {
         $user = new User;
 
+        $user->fname = Input::get( 'fname' );
+        $user->mname = Input::get( 'mname' );
+        $user->lname = Input::get( 'lname' );
         $user->username = Input::get( 'username' );
         $user->email = Input::get( 'email' );
         $user->password = Input::get( 'password' );
