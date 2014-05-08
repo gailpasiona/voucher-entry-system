@@ -7,6 +7,9 @@ return array(
     'password_confirmation' => 'Confirm Password',
     'e_mail' => 'Email',
     'username_e_mail' => 'Username or Email',
+    'fname' => 'First Name',
+    'mname' => 'Middle Name',
+    'lname' => 'Last Name',
 
     'signup' => array(
         'title' => 'Signup',

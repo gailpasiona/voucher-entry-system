@@ -83,8 +83,17 @@ return array(
 	*/
 
 	'custom' => array(
-		'attribute-name' => array(
-			'rule-name' => 'custom-message',
+		'fname' => array(
+			'required' => 'First Name is required.',
+                        'alpha' => 'First name may only contain letters.',
+		),
+                'mname' => array(
+			'required' => 'Middle Name is required.',
+                        'alpha' => 'Middle name may only contain letters.',
+		),
+                'lname' => array(
+			'required' => 'Last Name is required.',
+                        'alpha' => 'Last name may only contain letters.',
 		),
 	),
 
