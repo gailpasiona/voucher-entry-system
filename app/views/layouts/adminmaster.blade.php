@@ -11,6 +11,7 @@
 <!-- stylesheets -->
 {{ HTML::style('//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.min.css') }}
 {{ HTML::style('//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.min.css') }}
+{{ HTML::style('//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js')}}
 @yield('styles')
 {{ HTML::style('css/app.css') }}
  

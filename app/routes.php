@@ -26,3 +26,20 @@ Route::post('user/forgot_password',        'UserController@do_forgot_password');
 Route::get( 'user/reset_password/{token}', 'UserController@reset_password');
 Route::post('user/reset_password',         'UserController@do_reset_password');
 Route::get( 'user/logout',                 'UserController@logout');
+Route::get( 'setup/group/create',          'GroupController@create');
+Route::post('setup/group',                 'GroupController@save');
+Route::get( 'setup/group/perm',            'GroupController@add_permission');
+Route::get( 'setup/group/assign',          'GroupController@attach_user');
+Route::get('setup/permission/create',      'PermissionController@create');
+Route::post('setup/permission',            'PermissionController@save');
+Route::get('setup/business_partner/create','BusinessPartnerController@create');
+Route::post('setup/business_partner',      'BusinessPartnerController@save');
+Route::get('voucher/create',         'VoucherController@create');
+Route::post('voucher',                     'VoucherController@save');
+
+
+//print sql statements
+//Event::listen('illuminate.query', function($query)
+//{
+//    var_dump($query);
+//});

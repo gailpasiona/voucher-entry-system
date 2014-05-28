@@ -79,3 +79,6 @@ App::down(function()
 */
 
 require app_path().'/filters.php';
+
+//validator extension to support spaces
+require app_path().'/validators.php';

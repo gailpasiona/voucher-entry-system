@@ -70,6 +70,10 @@ return array(
 	),
 	"unique"               => "The :attribute has already been taken.",
 	"url"                  => "The :attribute format is invalid.",
+        "alpha_spaces"     => "The :attribute may only contain letters and spaces.",
+        "alpha_spaces_letteronly"     => "The :attribute may only contain letters and spaces.",
+        "amount"            =>      "The :attribute contains unrecognize amount",
+
 
 	/*
 	|--------------------------------------------------------------------------
@@ -95,6 +99,10 @@ return array(
 			'required' => 'Last Name is required.',
                         'alpha' => 'Last name may only contain letters.',
 		),
+                'particular' => array(
+			'required' => 'You must define at least one item line',
+                        'alpha' => 'Last name may only contain letters.',
+                ),
 	),
 
 	/*

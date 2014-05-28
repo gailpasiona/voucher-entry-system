@@ -78,3 +78,8 @@ Route::filter('csrf', function()
 		throw new Illuminate\Session\TokenMismatchException;
 	}
 });
+
+
+//Entrust route filtering
+Entrust::routeNeedsRole( 'setup*', 'Superuser', Redirect::to('/') );
+Entrust::routeNeedsPermission('voucher*','manage_vouchers', Redirect::to('/'));
