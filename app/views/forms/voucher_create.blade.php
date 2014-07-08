@@ -1,12 +1,5 @@
 @extends('layouts.adminmaster')
  
-{{-- main.prepend --}}
-@section('main.prepend')
-{{-- maybe, need dump form errors --}}
-<div class="row">
-@stop
- 
-
 {{-- content --}}
 @section('content')
 @if ( $errors->count() > 0 )
@@ -21,11 +14,11 @@
 @endif
 
 @if ( Session::has('notice') )
-    <div class="alert">{{ Session::get('notice') }}</div>
+    <div class="text-center alert alert-success col-md-6 col-md-offset-3">{{ Session::get('notice') }}</div>
 @endif
 <div class="col-md-10 col-md-offset-1">
-    <label for="name_div"> <h3><span class="label label-default">Voucher Entry Form</span></h3></label>
-    <div class="panel panel-default col-md-12">
+    <!--<label for="name_div"> <h3><span class="label label-default">Add Entry </span></h3></label>-->
+    <div class="col-md-12">
         <div class="panel-body">
             <form class="form-horizontal" role="form" method="POST" action="{{{ action('VoucherController@save') }}}" accept-charset="UTF-8">
                 <fieldset>
@@ -107,38 +100,15 @@
                
 @stop
 
-<script>
-    var rowNum = 0;
-    var rowExist = false;
-    function addRow(frm) {
-    if(!rowExist){
-        rowNum = $('.particulars').length;
-        rowExist = true;
-    }
-    rowNum ++;
-    //alert(rowNum);
-    var row = '<div id="rowNum'+rowNum+'">\n\
-        <div class="col-md-7 particulars"><span class="col-md-1 control-label">Description</span>\n\
-        <input type="text" class="form-control" id="particular[]" name="particular[]" placeholder="Item Description"></div>';
-    
-    var row1 = '<div class="col-md-3"><span class="col-md-1 control-label">Amount</span>\n\
-                <input type="text" class="form-control" id="amount[]" name="amount[]" placeholder="Amount"></div>';
-   
-    var r = row + row1 + '<div class="col-md-2"> <span class="col-md-1 control-label">Action</span><input class="btn btn-primary btn-block" type="button" value="-" onclick="removeRow('+rowNum+');"></div></div>';
-    
-   jQuery('#items').append(r);
-      //frm.add_qty.value = '';
-//    frm.add_name.value = '';
-    }  
-    
-   function removeRow(rnum) {
-        jQuery('#rowNum'+rnum).remove();
-   }
-   
-   function init_rownum(val) {
-       rowNum = val;
-       alert(rowNum);
-   }
-   
 
-</script>
+{{-- content --}}
+@section('scripts')
+    
+
+    <!-- Page-Level Plugin Scripts - Dashboard -->
+    <script src="{{ URL::asset('js/plugins/morris/raphael-2.1.0.min.js')}}"></script>
+    <script src="{{ URL::asset('js/plugins/morris/morris.js')}}"></script>
+
+   <!-- Page-Level Demo Scripts - Dashboard - Use for reference
+    <script src="{{ URL::asset('js/demo/dashboard-demo.js')}}"></script>-->
+@stop

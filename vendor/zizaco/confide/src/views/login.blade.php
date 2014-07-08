@@ -1,7 +1,7 @@
 @extends('layouts.publicmaster')
 @section('content')
-<div class="panel panel-default col-sm-6 col-sm-offset-3">
-    <h3 class="text-center">Sign in to your account</h3>
+<div class="login-panel panel panel-default col-md-4 col-md-offset-4">
+    <h3 class="text-center">DSTI Voucher Entry</h3>
     <form method="POST" action="{{{ Confide::checkAction('UserController@do_login') ?: URL::to('/user/login') }}}" accept-charset="UTF-8">
         <input type="hidden" name="_token" value="{{{ Session::getToken() }}}">
         <fieldset>
@@ -35,9 +35,17 @@
                 <button tabindex="3" type="submit" class="btn btn-default btn-block">{{{ Lang::get('confide::confide.login.submit') }}}</button>
             </div>-->
             <div class="form-actions form-group">
-                  <button type="submit" class="btn btn-primary btn-block">{{{ Lang::get('confide::confide.login.submit') }}}</button>
+                  <button type="submit" class="btn btn-lg btn-success btn-block">{{{ Lang::get('confide::confide.login.submit') }}}</button>
             </div>
         </fieldset>
     </form>
+    <div class="text-center">
+         <label>
+            <a href="/user/create">Create an Account</a>
+<!--                <small>
+                    <a href="{{{ (Confide::checkAction('UserController@forgot_password')) ?: 'forgot' }}}">{{{ Lang::get('confide::confide.login.forgot_password') }}}</a>
+                </small>-->
+        </label>
+    </div>
 </div>
 @stop

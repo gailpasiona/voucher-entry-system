@@ -121,6 +121,7 @@ return array(
 		'Illuminate\Workbench\WorkbenchServiceProvider',
                 'Zizaco\Confide\ConfideServiceProvider',
                 'Zizaco\Entrust\EntrustServiceProvider',
+                'Bllim\Datatables\DatatablesServiceProvider',
 
 	),
 
@@ -189,6 +190,7 @@ return array(
 		'View'            => 'Illuminate\Support\Facades\View',
                 'Confide'    => 'Zizaco\Confide\ConfideFacade',
                 'Entrust'    => 'Zizaco\Entrust\EntrustFacade',
+                'Datatables'      => 'Bllim\Datatables\Datatables',
 
 	),
 

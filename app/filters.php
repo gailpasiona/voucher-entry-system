@@ -33,16 +33,16 @@ App::after(function($request, $response)
 |
 */
 
-Route::filter('auth', function()
-{
-	if (Auth::guest()) return Redirect::guest('login');
-});
-
-
-Route::filter('auth.basic', function()
-{
-	return Auth::basic();
-});
+//Route::filter('auth', function()
+//{
+//	if (Auth::guest()) return Redirect::guest('user/login');
+//});
+//
+//
+//Route::filter('auth.basic', function()
+//{
+//	return Auth::basic();
+//});
 
 /*
 |--------------------------------------------------------------------------
@@ -55,10 +55,26 @@ Route::filter('auth.basic', function()
 |
 */
 
-Route::filter('guest', function()
+
+
+Route::filter('auth', function()
 {
-	if (Auth::check()) return Redirect::to('/');
+    if ( Auth::guest() ) // If the user is not logged in
+    {
+        return Redirect::guest('user/login');
+    }
 });
+
+// Only authenticated users will be able to access routes that begins with
+// 'admin'. Ex: 'admin/posts', 'admin/categories'.
+Route::when('voucher*', 'auth');
+Route::when('setup*', 'auth');
+Route::when('/', 'auth');
+//Route::filter('guest', function()
+//{
+//	if (Auth::check()) return Redirect::to('/');
+//});
+
 
 /*
 |--------------------------------------------------------------------------
@@ -81,5 +97,6 @@ Route::filter('csrf', function()
 
 
 //Entrust route filtering
-Entrust::routeNeedsRole( 'setup*', 'Superuser', Redirect::to('/') );
+//Entrust::routeNeedsRole( 'setup*', 'Superuser', Redirect::to('/') );
 Entrust::routeNeedsPermission('voucher*','manage_vouchers', Redirect::to('/'));
+Entrust::routeNeedsPermission('setup*','manage_users', Redirect::to('/'));

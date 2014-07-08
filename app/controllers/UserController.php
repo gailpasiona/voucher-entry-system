@@ -45,7 +45,10 @@ class UserController extends BaseController {
 
         if ( $user->id )
         {
-                        $notice = Lang::get('confide::confide.alerts.account_created') . ' ' . Lang::get('confide::confide.alerts.instructions_sent'); 
+                        $notice = Lang::get('confide::confide.alerts.account_created') . ' ' . Lang::get('confide::confide.alerts.instructions_sent');
+                        $user = User::where('username',$user->username)->first();
+                        $group = Role::where('name','Users')->first();
+                        $user->attachRole($group);
                     
             // Redirect with success message, You may replace "Lang::get(..." for your custom message.
                         return Redirect::action('UserController@login')
@@ -228,5 +231,5 @@ class UserController extends BaseController {
         
         return Redirect::to('/');
     }
-
+    
 }

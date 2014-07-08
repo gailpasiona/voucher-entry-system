@@ -13,7 +13,7 @@
 
 Route::get('/', function()
 {
-	return View::make('hello');
+	return View::make('layouts.dashboard');
 });
 // Confide routes
 Route::get( 'user/create',                 'UserController@create');
@@ -30,13 +30,18 @@ Route::get( 'setup/group/create',          'GroupController@create');
 Route::post('setup/group',                 'GroupController@save');
 Route::get( 'setup/group/perm',            'GroupController@add_permission');
 Route::get( 'setup/group/assign',          'GroupController@attach_user');
+Route::post('setup/group/attach',          'GroupController@update_user_role');
 Route::get('setup/permission/create',      'PermissionController@create');
 Route::post('setup/permission',            'PermissionController@save');
 Route::get('setup/business_partner/create','BusinessPartnerController@create');
 Route::post('setup/business_partner',      'BusinessPartnerController@save');
-Route::get('voucher/create',         'VoucherController@create');
+Route::get('voucher/create',               'VoucherController@create');
 Route::post('voucher',                     'VoucherController@save');
+Route::get('voucher/list',               'VoucherController@edit');
+Route::get('voucher/ajax',               'VoucherController@popTable');
 
+Route::get('voucher/modify/{name}', array('as' => 'modifyVoucher', 'uses' => 'VoucherController@modify'));
+Route::post('voucher/update',               'VoucherController@update');
 
 //print sql statements
 //Event::listen('illuminate.query', function($query)

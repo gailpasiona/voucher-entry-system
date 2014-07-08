@@ -28,7 +28,7 @@ return array(
 	|
 	*/
 
-	'host' => 'mail.sunwest.ph',
+	'host' => 'smtp.gmail.com',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -54,7 +54,7 @@ return array(
 	|
 	*/
 
-	'from' => array('address' => 'gpasiona@sunwest.ph', 'name' => 'Admin'),
+	'from' => array('address' => 'markdizon22@gmail.com', 'name' => 'DSTI Admin'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -80,7 +80,7 @@ return array(
 	|
 	*/
 
-	'username' => 'gpasiona@sunwest.ph',
+	'username' => 'markdizon22@gmail.com',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -93,7 +93,7 @@ return array(
 	|
 	*/
 
-	'password' => '5unwest101',
+	'password' => 'g1k6l6z1g',
 
 	/*
 	|--------------------------------------------------------------------------
