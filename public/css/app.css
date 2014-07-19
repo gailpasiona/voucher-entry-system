@@ -207,3 +207,7 @@ body { padding-top: 100px; background-color: #f8f8f8;}
 #content{
     padding-top: 30px;
 }
+
+.dataTables_length label{
+    border: 1;
+}

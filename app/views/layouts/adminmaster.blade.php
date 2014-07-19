@@ -10,7 +10,9 @@
  
 <!-- stylesheets -->
 {{ HTML::style('//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.min.css') }}
-{{ HTML::style('//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.min.css') }}
+{{HTML::style('font-awesome/css/font-awesome.css')}}
+<!--{{ HTML::style('//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.min.css') }}-->
+<!--{{HTML::style('//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css')}}-->
 {{ HTML::style('//cdn.datatables.net/plug-ins/28e7751dbec/integration/bootstrap/3/dataTables.bootstrap.css')}}
 
 @yield('styles')
@@ -97,22 +99,23 @@ var URL = {
             <div class="navbar-default navbar-static-side" role="navigation">
                 <div class="sidebar-collapse">
                     <ul class="nav" id="side-menu">
-                        <li class="sidebar-search">
+<!--                        <li class="sidebar-search">
                             <div class="input-group custom-search-form">
                                 <input type="text" class="form-control" placeholder="Search...">
-                                <span class="input-group-btn">
+                                <span class="input-group-btn">S
                                 <button class="btn btn-default" type="button">
                                     <i class="fa fa-search"></i>
                                 </button>
+                                
                             </span>
                             </div>
-                            <!-- /input-group -->
+                             /input-group 
+                        </li>-->
+                        <li>
+                            <a href="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
                         <li>
-                            <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Vouchers<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-list fa-fw"></i> Vouchers<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="{{{action('VoucherController@create')}}}">Create Entry</a>
@@ -197,6 +200,7 @@ var URL = {
     <div id="page-wrapper">
         <div id="content">
             @yield('content')
+            @yield('modal_edit')
         </div><!-- ./ #content -->
     </div>
 </div><!-- ./ #main -->
@@ -216,6 +220,7 @@ var URL = {
 <script src="{{ URL::asset('js/sb-admin.js')}}"
 <script src="{{ URL::asset('js/bootstrap-multiselect.js')}}"></script>
 @yield('scripts')
+
 <script src="{{ URL::asset('js/items.js')}}"></script> 
  
 <script>

@@ -30,9 +30,26 @@ class VoucherController extends BaseController{
         $vouchers = DB::table('business_partners')->join('vouchers','business_partners.bp_id','=','vouchers.payto_id')->
                 select('vouchers.voucher_number','vouchers.total_amount','vouchers.check_number',
                         'vouchers.bank','business_partners.bp_name');
-        return Datatables::of($vouchers)->add_column('operations','<a href="{{ route("modifyVoucher", $voucher_number) }}">modify</a>')->make();
+        //return Datatables::of($vouchers)->add_column('operations','<a href="{{ route("modifyVoucher", $voucher_number) }}"><i class="fa fa-pencil-square fa-lg"></i></a>')->make();
+    
+        return Datatables::of($vouchers)->add_column('operations','<a href="{{ route("modifyVoucher", $voucher_number) }}" data-toggle="modal" data-target="#edit_modal"><i class="fa fa-pencil-square fa-lg"></i></a>')->make();
     }
     
+//normal loading
+//    public function modify($voucher_no){
+//        $partner = BusinessPartner::select('bp_id','bp_name')->get();
+//         
+//        $record = Voucher::find($voucher_no)->toArray();
+//        
+//        $particulars = Voucher::find($voucher_no)->particulars->toArray();
+//        
+//        
+//        return View::make('forms.voucher_modify')->with('info', $record)
+//            ->with('partners', $partner)
+//                ->with('particulars',$particulars);
+//        
+//    }
+    //modal form
     public function modify($voucher_no){
         $partner = BusinessPartner::select('bp_id','bp_name')->get();
          
@@ -41,7 +58,7 @@ class VoucherController extends BaseController{
         $particulars = Voucher::find($voucher_no)->particulars->toArray();
         
         
-        return View::make('forms.voucher_modify')->with('info', $record)
+        return View::make('forms.voucher_modify_ajax')->with('info', $record)
             ->with('partners', $partner)
                 ->with('particulars',$particulars);
         
@@ -90,6 +107,7 @@ class VoucherController extends BaseController{
         $record = $this->prepareRecord(Input::except('particular','amount'));
         $particulars = $this->prepareKeysfromDB(Input::only('particular', 'amount'));
         $v = Voucher::find(Input::get('voucher_number'));
+        $message = "";
         if($filter->passes()){
            //dd(Input::all());
                 $v->total_amount = Input::get('total_amount');
@@ -100,25 +118,98 @@ class VoucherController extends BaseController{
                 if(count($v->getDirty()) > 0) /* avoiding resubmission of same content */
                 {
                     $v->push();
-                    echo 'Post is updated!';
+                    //echo 'Post is updated!';
                     //return Redirect::back()->with('success', 'Post is updated!');
+                    $message = "Info Changes Committed, ";
                 }
                 else
                     //return Redirect::back()->with('success','Nothing to update!');
-                    echo 'Nothing to update!';
+                   // echo 'Nothing to update!';
+                    $message = "No Info Changes, ";
                 
-                $this->updateItems($particulars, Input::get('voucher_number'));
+                if($this->updateItems($particulars, Input::get('voucher_number')) > 0)
+                        $message = $message . "Particulars also updated!";
+                else $message = $message . "No changes in particulars";
+                
+               
+                Redirect::back()->with('success', $message);
             
         }
        // else var_dump($filter->messages());
         
         else{
-            return View::make('forms.voucher_modify')->with('info', $record)
+//            return View::make('forms.voucher_modify')->with('info', $record)
+//            ->with('partners', $partner)
+//                    ->with('errors', $filter->messages())
+//                ->with('particulars',$particulars);
+            
+            return Redirect::back()->with('info', $record)
             ->with('partners', $partner)
                     ->with('errors', $filter->messages())
                 ->with('particulars',$particulars);
         }
         
+    }
+    
+    public function updates(){
+        $response = array('status' => NULL, 'msg'=> NULL , 'error' => NULL , 'flag' => NULL);
+        $monitor_flag = NULL;
+        if (Request::ajax())
+        {
+            $partner = BusinessPartner::select('bp_id','bp_name')->get();
+            $filter = Voucher::validate(Input::all());
+            //$record = $this->prepareRecord(Input::except('particular','amount'));
+            $particulars = $this->prepareKeysfromDB(Input::all());//only('particular', 'amount'));
+            $v = Voucher::find(Input::get('voucher_number'));
+            
+            if($filter->passes()){
+                $v->total_amount = Input::get('total_amount');
+                $v->check_number = Input::get('check_number');
+                $v->bank = Input::get('bank');
+                $v->payto()->associate(BusinessPartner::find(Input::get('payee')));
+               // dd($v->getDirty());
+                if(count($v->getDirty()) > 0) /* avoiding resubmission of same content */
+                {
+                    $v->push();
+                    //echo 'Post is updated!';
+                    //return Redirect::back()->with('success', 'Post is updated!');
+                    $message = "Info Changes Committed, ";
+                    $monitor_flag = 1;
+                }
+                else
+                    $message = "No Info Changes, ";
+                
+                if($this->updateItems($particulars, Input::get('voucher_number')) > 0){
+                    $message = $message . "Particulars also updated!";
+                    if(is_null($monitor_flag)) 
+                        $monitor_flag = 1;
+                    else{
+                        if($monitor_flag == 0) $response['flag'] = 1; 
+                    }
+                }
+                       
+                else{
+                     $message = $message . "No changes in particulars";
+                     if(is_null($monitor_flag)) 
+                         $monitor_flag = 0;
+                } 
+                   
+                
+                $response['status'] = "success";
+                $response['msg'] = $message;
+                $response['flag'] = $monitor_flag;
+            }
+            
+            else{
+                $response['status'] = "success";
+                $response['msg'] = "validation error";
+                $response['error'] = $filter->messages()->toJson();
+                $response['flag'] = 0;
+            }
+        
+         return Response::json( $response );
+        }
+        //dd(Input::all());
     }
     
     private function insertItems($line_items,$v_no){
@@ -142,16 +233,18 @@ class VoucherController extends BaseController{
     private function updateItems($line_items,$v_no){
         foreach($line_items as $line){
              $item = Particular::where('voucher_number','=',$v_no)->where('line_number', '=', $line['line_number'])->first();
-             
+             $returninfo = 0;
              if($item){
                  
                  $item->line_number = $line['line_number']; 
                  $item->item_desc = $line['item_desc']; 
                  $item->item_amount = $line['item_amount'];
                  
-                 if(count($item->getDirty()) > 0)
+                 if(count($item->getDirty()) > 0){
                      $item->save();
-                 //else echo 'nothing to update ulit';
+                     $returninfo = 1;
+                 }
+                 
              }
              
              else{
@@ -164,9 +257,13 @@ class VoucherController extends BaseController{
                  $new_item->voucher()->associate(Voucher::find($v_no));
                  
                  $new_item->save();
+                 
+                 $returninfo = 1;
              }
              
         }
+        
+        return $returninfo;
     }
     
     private function prepareKeysfromInput($param) {

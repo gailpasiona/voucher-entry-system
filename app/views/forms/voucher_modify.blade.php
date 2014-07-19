@@ -12,6 +12,10 @@
         </ul>
     </div>
 @endif
+
+@if ( Session::has('success') )
+    <div class="text-center alert alert-success col-md-6 col-md-offset-3">{{ Session::get('success') }}</div>
+@endif
     <div class="col-md-10 col-md-offset-1">
     <label for="name_div"> <h3><span class="label label-default">Voucher Entry Form</span></h3></label>
     <div class="panel panel-default col-md-12">

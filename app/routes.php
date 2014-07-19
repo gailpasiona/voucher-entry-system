@@ -42,6 +42,7 @@ Route::get('voucher/ajax',               'VoucherController@popTable');
 
 Route::get('voucher/modify/{name}', array('as' => 'modifyVoucher', 'uses' => 'VoucherController@modify'));
 Route::post('voucher/update',               'VoucherController@update');
+Route::post('voucher/updates', array('as' => 'updateVoucher', 'uses' => 'VoucherController@updates'));
 
 //print sql statements
 //Event::listen('illuminate.query', function($query)
