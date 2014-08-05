@@ -23,8 +23,8 @@
     <div class="alert">{{ Session::get('notice') }}</div>
 @endif-->
 <div class="col-md-12">
-    <a href="#" class="btn btn-success btn-md pull-left navbar-btn"><span class="fa fa-file fa-md"></span> Add Record</a>
-    
+    <a href="{{ route('createVoucher')}}" data-toggle="modal" data-target="#create_modal" class="btn btn-success btn-md pull-left navbar-btn"><span class="fa fa-file fa-md"></span> Add Record</a>
+    <!--/<a data-toggle="modal" class="btn btn-success btn-md pull-left" href="{{ route('createVoucher')}}" data-target="#create_modal"><span class="fa fa-file fa-md"></span>Click me !</a>-->
 </div>
 <div class="col-md-12"> 
     <table id="records" class="table table-striped" cellspacing="0" width="100%">
@@ -60,7 +60,9 @@
     <div class="modal fade" id="edit_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   
     </div>
+    <div class="modal fade" id="create_modal" tabindex="-2" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
 
+    </div>
 
 @stop
 
@@ -100,46 +102,55 @@
                  
         });
         
-        $(document).ready(function() {
-
-  // Match to Bootstraps data-toggle for the modal
-  // and attach an onclick event handler
-  $('a[data-toggle="modal"]').on('click', function(e) {
-
-    // From the clicked element, get the data-target arrtibute
-    // which BS3 uses to determine the target modal
-    var target_modal = $(e.currentTarget).data('target');
-    // also get the remote content's URL
-    var remote_content = e.currentTarget.href;
-
-    // Find the target modal in the DOM
-    var modal = $(target_modal);
-    // Find the modal's <div class="modal-body"> so we can populate it
-    var modalBody = $(target_modal + ' .modal-body');
-
-    // Capture BS3's show.bs.modal which is fires
-    // immediately when, you guessed it, the show instance method
-    // for the modal is called
-    modal.on('show.bs.modal', function () {
-            // use your remote content URL to load the modal body
-            modalBody.load(remote_content);
-        }).modal();
-        // and show the modal
-
-    // Now return a false (negating the link action) to prevent Bootstrap's JS 3.1.1
-    // from throwing a 'preventDefault' error due to us overriding the anchor usage.
-    return false;
-  });
-});
+//        $(document).ready(function() {
+//
+//  // Match to Bootstraps data-toggle for the modal
+//  // and attach an onclick event handler
+//  $('a[data-toggle="modal"]').on('click', function(e) {
+//
+//    // From the clicked element, get the data-target arrtibute
+//    // which BS3 uses to determine the target modal
+//    var target_modal = $(e.currentTarget).data('target');
+//    // also get the remote content's URL
+//    var remote_content = e.currentTarget.href;
+//
+//    // Find the target modal in the DOM
+//    var modal = $(target_modal);
+//    // Find the modal's <div class="modal-body"> so we can populate it
+//    var modalBody = $(target_modal + ' .modal-body');
+//
+//    // Capture BS3's show.bs.modal which is fires
+//    // immediately when, you guessed it, the show instance method
+//    // for the modal is called
+//    modal.on('show.bs.modal', function () {
+//            // use your remote content URL to load the modal body
+//            modalBody.load(remote_content);
+//        }).modal();
+//        // and show the modal
+//
+//    // Now return a false (negating the link action) to prevent Bootstrap's JS 3.1.1
+//    // from throwing a 'preventDefault' error due to us overriding the anchor usage.
+//    return false;
+//  });
+//});
 
 $('#edit_modal').on('hidden.bs.modal', function () {
   $(this).removeData('bs.modal');
   if(changes_flag > 0){
        var $lmTable = $("#records").dataTable( { bRetrieve : true } );
        $lmTable.fnDraw();
-       //changes_flag = 0;
+       changes_flag = 0;
   }
  
+});
+
+$('#create_modal').on('hidden.bs.modal', function () {
+   $(this).removeData(('bs.modal'));
+   if(changes_flag > 0){
+       var $lmTable = $("#records").dataTable( { bRetrieve : true } );
+       $lmTable.fnDraw();
+       changes_flag = 0;
+  }
 });
 
 

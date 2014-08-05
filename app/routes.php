@@ -36,9 +36,11 @@ Route::post('setup/permission',            'PermissionController@save');
 Route::get('setup/business_partner/create','BusinessPartnerController@create');
 Route::post('setup/business_partner',      'BusinessPartnerController@save');
 Route::get('voucher/create',               'VoucherController@create');
-Route::post('voucher',                     'VoucherController@save');
+Route::post('voucher/add',                     'VoucherController@saves');
 Route::get('voucher/list',               'VoucherController@edit');
 Route::get('voucher/ajax',               'VoucherController@popTable');
+
+Route::get('voucher/create2', array('as' => 'createVoucher', 'uses' => 'VoucherController@create2'));
 
 Route::get('voucher/modify/{name}', array('as' => 'modifyVoucher', 'uses' => 'VoucherController@modify'));
 Route::post('voucher/update',               'VoucherController@update');

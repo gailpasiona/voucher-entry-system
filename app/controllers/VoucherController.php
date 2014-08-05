@@ -15,6 +15,13 @@ class VoucherController extends BaseController{
         return View::make('forms.voucher_create')->with('partners',$partner);
     }
     
+    public function create2()
+    {
+        $partner = BusinessPartner::select('bp_id','bp_name')->get();
+       
+        return View::make('forms.voucher_create_ajax')->with('partners',$partner);
+    }
+    
     public function edit()
     {
         $partner = BusinessPartner::select('bp_id','bp_name')->get();
@@ -151,6 +158,55 @@ class VoucherController extends BaseController{
         
     }
     
+    public function saves(){
+        //$bpid = Input::get( 'bp' );
+        $response = array('status' => NULL, 'msg'=> NULL , 'error' => NULL , 'flag' => NULL);
+         $monitor_flag = NULL;
+        if (Request::ajax())
+        {
+            $filter = Voucher::validate(Input::all());
+        
+            $items = $this->prepareKeysfromInput(Input::only('particular', 'amount'));
+            
+            if($filter->passes()) {
+            
+                $voucher = new Voucher;
+
+                $control_no = date('Y') . '-' . (DB::table('vouchers')->count() + 1);
+
+                $voucher->voucher_number = $control_no;
+                $voucher->total_amount = Input::get('total_amount');
+                $voucher->check_number = Input::get('check_number');
+                $voucher->bank = Input::get('bank');
+
+                $voucher->payto()->associate(BusinessPartner::find(Input::get('payee')));
+
+                $voucher->user()->associate(Confide::user());
+
+                if($voucher->save()){
+                    //if(isset(Input::get('particular', 'amount')))
+                   $this->insertItems($items,$control_no); 
+                }
+                $response['status'] = "success";
+                $response['msg'] = "Record Saved!";
+                $response['flag'] = 1;
+            }
+            else{
+                $response['status'] = "success1";
+                $response['msg'] = "validation error";
+                $response['flag'] = 0;
+                $response['error'] = $filter->messages()->toJson();
+//            return Redirect::action('VoucherController@create')
+//                            ->withInput(Input::except('particular','amount'))
+//                            ->with('errors', $filter->messages())
+//                            ->with('particulars', $items);
+            }
+        }
+        
+        return Response::json( $response );  
+        
+    }
+    
     public function updates(){
         $response = array('status' => NULL, 'msg'=> NULL , 'error' => NULL , 'flag' => NULL);
         $monitor_flag = NULL;
@@ -159,10 +215,12 @@ class VoucherController extends BaseController{
             $partner = BusinessPartner::select('bp_id','bp_name')->get();
             $filter = Voucher::validate(Input::all());
             //$record = $this->prepareRecord(Input::except('particular','amount'));
-            $particulars = $this->prepareKeysfromDB(Input::all());//only('particular', 'amount'));
+            //$particulars = $this->prepareKeysfromDB(Input::all());//only('particular', 'amount'));
             $v = Voucher::find(Input::get('voucher_number'));
             
             if($filter->passes()){
+                $particulars = $this->prepareKeysfromDB(Input::all());
+                
                 $v->total_amount = Input::get('total_amount');
                 $v->check_number = Input::get('check_number');
                 $v->bank = Input::get('bank');
@@ -180,7 +238,7 @@ class VoucherController extends BaseController{
                     $message = "No Info Changes, ";
                 
                 if($this->updateItems($particulars, Input::get('voucher_number')) > 0){
-                    $message = $message . "Particulars also updated!";
+                    $message = $message . "Particulars updated!";
                     if(is_null($monitor_flag)) 
                         $monitor_flag = 1;
                     else{
@@ -201,7 +259,7 @@ class VoucherController extends BaseController{
             }
             
             else{
-                $response['status'] = "success";
+                $response['status'] = "success1";
                 $response['msg'] = "validation error";
                 $response['error'] = $filter->messages()->toJson();
                 $response['flag'] = 0;
@@ -229,10 +287,12 @@ class VoucherController extends BaseController{
            
         }
     }
-    //note: no support for removing of particulars, if needed just change amount to 0 for now
+
     private function updateItems($line_items,$v_no){
+        $key_id = null;
         foreach($line_items as $line){
              $item = Particular::where('voucher_number','=',$v_no)->where('line_number', '=', $line['line_number'])->first();
+             $key_id = $line['line_number'];
              $returninfo = 0;
              if($item){
                  
@@ -262,6 +322,9 @@ class VoucherController extends BaseController{
              }
              
         }
+        //delete all remaining particulars
+        $items_for_delete = Particular::where('voucher_number','=',$v_no)->where('line_number', '>', $key_id)->delete(); 
+        
         
         return $returninfo;
     }

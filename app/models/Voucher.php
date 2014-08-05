@@ -7,6 +7,7 @@ class Voucher extends Eloquent {
     protected $primaryKey = 'voucher_number';
     
     public static $rules = array(
+       // 'voucher_number' => 'required',
         'payee'  => 'required',
         'total_amount' => 'required|amount',
         'bank'  =>  'required|alpha_spaces_letteronly',
