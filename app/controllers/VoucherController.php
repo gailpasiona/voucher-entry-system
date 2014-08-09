@@ -31,10 +31,7 @@ class VoucherController extends BaseController{
     }
     
     public function popTable(){
-//        $vouchers = Voucher::select(array('voucher_number','total_amount',
-//                                    'bank','check_number','payto_id as payto'));
-//      
-        $vouchers = DB::table('business_partners')->join('vouchers','business_partners.bp_id','=','vouchers.payto_id')->
+    $vouchers = DB::table('business_partners')->join('vouchers','business_partners.bp_id','=','vouchers.payto_id')->
                 select('vouchers.voucher_number','vouchers.total_amount','vouchers.check_number',
                         'vouchers.bank','business_partners.bp_name');
         //return Datatables::of($vouchers)->add_column('operations','<a href="{{ route("modifyVoucher", $voucher_number) }}"><i class="fa fa-pencil-square fa-lg"></i></a>')->make();

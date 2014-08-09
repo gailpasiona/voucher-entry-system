@@ -28,7 +28,7 @@ return array(
 	|
 	*/
 
-	'host' => 'smtp.gmail.com',
+	'host' => 'securesgp3.sgcpanel.com',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -54,7 +54,7 @@ return array(
 	|
 	*/
 
-	'from' => array('address' => 'markdizon22@gmail.com', 'name' => 'DSTI Admin'),
+	'from' => array('address' => 'noreply@diffsigma.com', 'name' => 'DSTI Services'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -80,7 +80,7 @@ return array(
 	|
 	*/
 
-	'username' => 'markdizon22@gmail.com',
+	'username' => 'noreply@diffsigma.com',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -93,7 +93,7 @@ return array(
 	|
 	*/
 
-	'password' => 'g1k6l6z1g',
+	'password' => 'dstiApp$#',
 
 	/*
 	|--------------------------------------------------------------------------

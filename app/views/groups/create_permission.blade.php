@@ -1,11 +1,11 @@
-@extends('layouts.publicmaster')
+@extends('layouts.adminmaster')
 
 @section('content')
 <div class="panel panel-default col-md-6 col-md-offset-3">
     <h2 class="text-center">Create New Permission</h2>
     <div class="panel-body">
     
-        <form class="form-horizontal" role="form" method="POST" action="{{{ action('BusinessPartnerController@save') }}}" accept-charset="UTF-8">
+        <form class="form-horizontal" role="form" method="POST" action="{{{ action('PermissionController@save') }}}" accept-charset="UTF-8">
             <fieldset>
                 <div class="form-group">
                     <label for="perm_name">{{{ Lang::get('strings.perm_name') }}}</label>

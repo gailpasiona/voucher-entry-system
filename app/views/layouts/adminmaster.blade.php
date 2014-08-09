@@ -148,45 +148,45 @@ var URL = {
                                      /.nav-third-level 
                                 </li>-->
                                 <li>
-                                    <a href="#">Business Partners <span class="fa arrow"></span></a>
-                                    <ul class="nav nav-third-level">
+<!--                                    <a href="#">Business Partners <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">-->
                                         <li>
-                                            <a href="{{{action('BusinessPartnerController@create')}}}"> Add Business Partner</a>
+                                            <a href="{{{action('BusinessPartnerController@listrecords')}}}"> Business Partner</a>
                                         </li>
-                                        <li>
+<!--                                        <li>
                                             <a href="">Modify Business Partner</a>
                                         </li>
-                                    </ul>
+                                    </ul>-->
                                     <!-- /.nav-third-level -->
                                 </li>
                                 <li>
-                                    <a href="#">Roles <span class="fa arrow"></span></a>
+                                    <a href="#">Authorization <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
                                         <li>
-                                            <a href="{{{action('GroupController@create')}}}">Create a Role</a>
+                                            <a href="{{{action('GroupController@create')}}}">Roles</a>
                                         </li>
-                                        <li>
+<!--                                        <li>
                                             <a href="">Modify a Role</a>
                                         </li>
-                                        <li>
+-->                                        <li>
                                             <a href="{{{action('GroupController@attach_user')}}}">Assign User(s) to Role</a>
                                         </li>
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>
                                 <li>
-                                    <a href="#">Permission <span class="fa arrow"></span></a>
-                                    <ul class="nav nav-third-level">
+<!--                                    <a href="#">Permission <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">-->
                                         <li>
-                                            <a href="{{{action('PermissionController@create')}}}">Create a Permission</a>
+                                            <a href="{{{action('PermissionController@create')}}}">Permissions</a>
                                         </li>
-                                        <li>
+<!--                                        <li>
                                             <a href="#">Modify a Permission</a>
                                         </li>
                                         <li>
                                             <a href="#">Delete permission</a>
                                         </li>
-                                    </ul>
+                                    </ul>-->
                                     <!-- /.nav-third-level -->
                                 </li>
                             </ul>

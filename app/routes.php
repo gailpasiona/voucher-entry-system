@@ -16,7 +16,7 @@ Route::get('/', function()
 	return View::make('layouts.dashboard');
 });
 // Confide routes
-Route::get( 'user/create',                 'UserController@create');
+Route::get( 'user/create',                 array('as' => 'signup', 'uses' => 'UserController@create'));
 Route::post('user',                        'UserController@store');
 Route::get( 'user/login',                  'UserController@login');
 Route::post('user/login',                  'UserController@do_login');
@@ -34,7 +34,12 @@ Route::post('setup/group/attach',          'GroupController@update_user_role');
 Route::get('setup/permission/create',      'PermissionController@create');
 Route::post('setup/permission',            'PermissionController@save');
 Route::get('setup/business_partner/create','BusinessPartnerController@create');
-Route::post('setup/business_partner',      'BusinessPartnerController@save');
+Route::get('setup/business_partner/list','BusinessPartnerController@listrecords');
+Route::get('setup/business_partner/ajax','BusinessPartnerController@popTable');
+Route::get('setup/business_partner/modify/{name}', array('as' => 'modifyBP', 'uses' => 'BusinessPartnerController@modify'));
+Route::get('setup/business_partner/create2', array('as' => 'createBP', 'uses' => 'BusinessPartnerController@create2'));
+Route::post('setup/business_partner/add',      'BusinessPartnerController@saves');
+Route::post('setup/business_partner/update', 'BusinessPartnerController@update');
 Route::get('voucher/create',               'VoucherController@create');
 Route::post('voucher/add',                     'VoucherController@saves');
 Route::get('voucher/list',               'VoucherController@edit');

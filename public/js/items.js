@@ -6,7 +6,7 @@
         rowExist = true;
     }
     rowNum ++;
-    //alert(rowNum);
+    console.log(rowNum);
     var row = '<div id="rowNum'+rowNum+'">\n\
         <div class="col-md-7 particulars"><span class="col-md-1 control-label">Description</span>\n\
         <input type="text" class="form-control" id="particular[]" name="particular[]" placeholder="Item Description"></div>';
@@ -16,7 +16,7 @@
    
     var r = row + row1 + '<div class="col-md-2"> <span class="col-md-1 control-label">Action</span><input class="btn btn-primary btn-block" type="button" value="-" onclick="removeRow('+rowNum+');"></div></div>';
     
-   jQuery('#items').append(r);
+   jQuery('.items').append(r);
       //frm.add_qty.value = '';
 //    frm.add_name.value = '';
     }  
@@ -28,6 +28,10 @@
    function init_rownum(val) {
        rowNum = val;
        alert(rowNum);
+   }
+   
+   function clearall(){
+       this.rowNum = 0;
    }
    
 

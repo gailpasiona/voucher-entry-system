@@ -99,4 +99,6 @@ Route::filter('csrf', function()
 //Entrust route filtering
 //Entrust::routeNeedsRole( 'setup*', 'Superuser', Redirect::to('/') );
 Entrust::routeNeedsPermission('voucher*','manage_vouchers', Redirect::to('/'));
-Entrust::routeNeedsPermission('setup*','manage_users', Redirect::to('/'));
+Entrust::routeNeedsPermission('setup/business_partner/*',array('manage_vouchers'), Redirect::to('/'));
+Entrust::routeNeedsPermission('setup/group/*','manage_users', Redirect::to('/'));
+Entrust::routeNeedsPermission('setup/permission/*','manage_users', Redirect::to('/'));

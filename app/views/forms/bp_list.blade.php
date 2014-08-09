@@ -8,22 +8,9 @@
 
 {{-- content --}}
 @section('content')
-<!--@if ( $errors->count() > 0 )
-    <div class="alert alert-error alert-danger col-md-6 col-md-offset-3">
-        <h4 class="text-center">The following errors have occurred:</h4>
-        <ul>
-            @foreach( $errors->all() as $message )
-                <li>{{ $message }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
 
-@if ( Session::has('notice') )
-    <div class="alert">{{ Session::get('notice') }}</div>
-@endif-->
 <div class="col-md-12">
-    <a href="{{ route('createVoucher')}}" data-toggle="modal" data-target="#create_modal" class="btn btn-success btn-md pull-left navbar-btn"><span class="fa fa-file fa-md"></span> Add Record</a>
+    <a href="{{ route('createBP')}}" data-toggle="modal" data-target="#create_modal" class="btn btn-success btn-md pull-left navbar-btn"><span class="fa fa-file fa-md"></span> Add Business Partner</a>
     <!--/<a data-toggle="modal" class="btn btn-success btn-md pull-left" href="{{ route('createVoucher')}}" data-target="#create_modal"><span class="fa fa-file fa-md"></span>Click me !</a>-->
 </div>
 <div class="col-md-12"> 
@@ -31,11 +18,9 @@
        
         <thead>
             <tr>
-                <th>Voucher No.</th>
-                <th>Total Amount</th>
-                <th>Cheque No.</th>
-                <th>Bank</th>
-                <th>Pay To</th>
+                <th>Business Partner</th>
+                <th>Building</th>
+                <th>City</th>
                 <th></th>
                 
             </tr>
@@ -43,8 +28,6 @@
         	<tbody>
                 <tr>	
                     <td></td>
-                    <td></td>
-                    <td></td>	
                     <td></td>
                     <td></td>
                     <td></td>
@@ -89,8 +72,6 @@
                 "bServerSide": true,
                 "sAjaxSource": "ajax",
                 "aoColumns": [
-                    null,
-                    null,
                     null,
                     null,
                     null,

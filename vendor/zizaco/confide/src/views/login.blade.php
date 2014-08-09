@@ -41,7 +41,7 @@
     </form>
     <div class="text-center">
          <label>
-            <a href="/user/create">Create an Account</a>
+            <a href="{{route('signup')}}">Create an Account</a>
 <!--                <small>
                     <a href="{{{ (Confide::checkAction('UserController@forgot_password')) ?: 'forgot' }}}">{{{ Lang::get('confide::confide.login.forgot_password') }}}</a>
                 </small>-->

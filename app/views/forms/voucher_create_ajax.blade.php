@@ -6,7 +6,7 @@
       </div>
       <div class="modal-body">
           <div class="messages"> </div>
-        <form class="form-horizontal" id="createform" role="form" method="POST" action="{{{ action('VoucherController@create') }}}" accept-charset="UTF-8">
+        <form class="form-horizontal" id="createform" role="form" method="POST" accept-charset="UTF-8">
                 <fieldset>
                     <div id="voucher_info" class="form-group">
                         <div class="col-md-12">
@@ -50,7 +50,7 @@
 
                      <div class="form-group">
                         <span class="col-md-1 control-label"><label>Particulars</label></span>
-                        <div id="items" class="col-md-12">
+                        <div id="items" class="col-md-12 items">
                             <div class="col-md-8 col-md-offset-2">
                                 <input class="btn btn-primary btn-block" onclick="addRow(this.form);" 
                                 type="button" value="Add Item Line" />
@@ -86,14 +86,14 @@
 
                 <div class="progress-bar bar f_bar" style="width: 0%;">
                      
-                    <span id="prog_txt">Please Wait</span>
+                    <span class="prog_txt">Please Wait</span>
 
                 </div>
 
             </div>
 
           <button type="button" class="btn btn-default" id="dumer" data-dismiss="modal">Close</button>
-          <button type="button" id="submitBtn" class="btn btn-primary">Save changes</button>
+          <button type="button" id="submitBtn" class="btn btn-primary submitBtn">Save changes</button>
       </div>
     </div>
     
@@ -102,7 +102,7 @@
             $('.modal-header').append('<h4 class="modal-title" id="myModalLabel2">New Record</h4>')
         });
         
-         $("#submitBtn").click(function(e){
+        $(".submitBtn").click(function(e){
         $(".f_bar").addClass( "active" )
         $(".bar").css("width", "0%");
        
@@ -126,7 +126,7 @@
         $("#submitBtn").prop("disabled", false);
          $(".bar").css("width", "100%");
          $(".f_bar").removeClass( "active" );
-         $("#prog_txt").hide();
+         $(".prog_txt").hide();
          $("div").removeClass("has-error");
          if(data.status == 'success1'){
              $( ".message_content" ).remove();//remove first if exists

@@ -2,7 +2,6 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <!--<h4 class="modal-title" id="myModalLabel">Modify Voucher Details</h4>-->
       </div>
       <div class="modal-body">
           <div class="messages"> </div>
@@ -61,7 +60,7 @@
 
                      <div class="form-group">
                         <span class="col-md-1 control-label"><label>Particulars</label></span>
-                        <div id="items" class="col-md-12">
+                        <div id="items" class="col-md-12 items">
                             <div class="col-md-8 col-md-offset-2">
                                 <input class="btn btn-primary btn-block" onclick="addRow(this.form);" 
                                 type="button" value="Add Item Line" />
@@ -85,10 +84,6 @@
                         </div>
                     </div>
                 </fieldset>
-<!--                <div class="form-actions modal-footer">
-                        <button type="button" class="btn btn-default" id="dumer" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                </div>-->
             </form>
       </div>
       <div class="modal-footer">
@@ -97,14 +92,14 @@
 
                 <div class="progress-bar bar f_bar" style="width: 0%;">
                      
-                    <span id="prog_txt">Please Wait</span>
+                    <span class="prog_txt">Please Wait</span>
 
                 </div>
 
             </div>
 
           <button type="button" class="btn btn-default" id="dumer" data-dismiss="modal">Close</button>
-          <button type="button" id="submitBtn" class="btn btn-primary">Save changes</button>
+          <button type="button" id="submitBtn" class="btn btn-primary submitBtn">Save changes</button>
       </div>
     </div>
     
@@ -114,7 +109,7 @@
         var doc = $('#voucher_number').val();
         $('.modal-header').append('<h4 class="modal-title" id="myModalLabel">Modify Voucher { Document No. '+ doc +' }</h4>')
     });
-    $("#submitBtn").click(function(e){
+    $(".submitBtn").click(function(e){
         $(".f_bar").addClass( "active" )
         $(".bar").css("width", "0%");
        
@@ -138,7 +133,7 @@
         $("#submitBtn").prop("disabled", false);
          $(".bar").css("width", "100%");
          $(".f_bar").removeClass( "active" );
-         $("#prog_txt").hide();
+         $(".prog_txt").hide();
          $("div").removeClass("has-error");
          if(data.status == 'success1'){
              $( ".message_content" ).remove();//remove first if exists
