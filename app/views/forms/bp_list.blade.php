@@ -9,7 +9,7 @@
 {{-- content --}}
 @section('content')
 
-<div class="col-md-12">
+<div class="col-md-12 row">
     <a href="{{ route('createBP')}}" data-toggle="modal" data-target="#create_modal" class="btn btn-success btn-md pull-left navbar-btn"><span class="fa fa-file fa-md"></span> Add Business Partner</a>
     <!--/<a data-toggle="modal" class="btn btn-success btn-md pull-left" href="{{ route('createVoucher')}}" data-target="#create_modal"><span class="fa fa-file fa-md"></span>Click me !</a>-->
 </div>

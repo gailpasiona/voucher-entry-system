@@ -39,7 +39,7 @@
                 @endif
 
                 <div class="form-actions form-group">
-                    <button type="submit" class="btn btn-primary btn-block">{{{ Lang::get('strings.group_submit') }}}</button>
+                    <button type="submit" class="btn btn-primary btn-block">Assign User Role</button>
                 </div>
             </fieldset>
         </form>
