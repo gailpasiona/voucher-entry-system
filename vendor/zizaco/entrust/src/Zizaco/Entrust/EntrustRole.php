@@ -20,7 +20,7 @@ class EntrustRole extends Ardent
      */
     public static $rules = array(
       'name' => 'required|between:4,128|unique:roles,name',
-      'permissions' => 'required',
+      //'permissions' => 'required',
      );
 
     /**

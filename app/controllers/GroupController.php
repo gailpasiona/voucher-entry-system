@@ -9,12 +9,11 @@ class GroupController extends BaseController{
     }
     
     public function save(){
-       // dd(Input::all());
         
         $group = new Role();
         
         $group->name = Input::get( 'group_name' );
-        
+       
         if($group->validate()){
             
             if($group->save()){
