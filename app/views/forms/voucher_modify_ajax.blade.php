@@ -48,6 +48,14 @@
                                 </div>
                                 
                             </div>
+                            
+                            <div class="form-group row">
+                                <label for="cheque" class="col-md-4 control-label">Date of Cheque</label>
+                                <div class="col-md-6 check_date">
+                                    <input class="form-control datepicker" placeholder="MM/DD/YYYY" type="text" name="check_date" id="check_date" value="">
+                                </div>
+                                
+                            </div>
                             <div class="form-group row">
                                 
                                 <label for="bp_building" class="col-md-4 control-label">Bank</label>
@@ -69,14 +77,18 @@
                             @if ( !empty($particulars))
                                 @foreach( $particulars as $items)
                                     <div id="rowNum{{{ $items['line_number'] }}}">
-                                        <div class="col-md-7 particulars">
+                                        <div class="col-md-3 ref_no">
+                                            <span class="col-md-1 control-label">Ref</span>
+                                            <input type="text" class="form-control" id="ref_no[]" name="ref_no[]" placeholder="Ref" value="{{{ $items['ref_no'] }}}">
+                                        </div>
+                                        <div class="col-md-5 particulars">
                                             <span class="col-md-1 control-label">Description</span>
                                             <input type="text" class="form-control" id="particular[]" name="particular[]" placeholder="Item Description" value="{{{ $items['item_desc'] }}}">
                                         </div>
                                         <div class="col-md-3 amounts"><span class="col-md-1 control-label">Amount</span>
                                             <input type="text" class="form-control" id="amount[]" name="amount[]" placeholder="Amount" value="{{{ $items['item_amount'] }}}">
                                         </div>
-                                        <div class="col-md-2"> <span class="col-md-1 control-label">Action</span><input class="btn btn-primary btn-block" type="button" value="-" onclick="removeRow('{{{ $items['line_number'] }}}');">
+                                        <!---->                                        <div class="col-md-1"> <span class="col-md-1 control-label"><br /></span><input class="btn btn-primary btn-block" type="button" value="-" onclick="removeRow('{{{ $items['line_number'] }}}');">
                                         </div>
                                     </div>
                                 @endforeach
@@ -109,6 +121,11 @@
         var doc = $('#voucher_number').val();
         $('.modal-header').append('<h4 class="modal-title" id="myModalLabel">Modify Voucher { Document No. '+ doc +' }</h4>')
     });
+    
+    $(function() {
+            $( '.datepicker' ).datepicker();
+    });
+    
     $(".submitBtn").click(function(e){
         $(".f_bar").addClass( "active" )
         $(".bar").css("width", "0%");

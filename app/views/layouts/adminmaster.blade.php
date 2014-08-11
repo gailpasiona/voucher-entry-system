@@ -222,6 +222,10 @@ var URL = {
 <script src="{{ URL::asset('js/plugins/metisMenu/jquery.metisMenu.js')}}"></script>
 <script src="{{ URL::asset('js/sb-admin.js')}}"
 <script src="{{ URL::asset('js/bootstrap-multiselect.js')}}"></script>
+
+    
+    
+   
 @yield('scripts')
 
 <script src="{{ URL::asset('js/items.js')}}"></script> 

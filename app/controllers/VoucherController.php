@@ -174,6 +174,7 @@ class VoucherController extends BaseController{
                 $voucher->voucher_number = $control_no;
                 $voucher->total_amount = Input::get('total_amount');
                 $voucher->check_number = Input::get('check_number');
+                $voucher->check_date = Input::get('check_date');
                 $voucher->bank = Input::get('bank');
 
                 $voucher->payto()->associate(BusinessPartner::find(Input::get('payee')));
@@ -220,6 +221,7 @@ class VoucherController extends BaseController{
                 
                 $v->total_amount = Input::get('total_amount');
                 $v->check_number = Input::get('check_number');
+                $v->check_date = Input::get('check_date');
                 $v->bank = Input::get('bank');
                 $v->payto()->associate(BusinessPartner::find(Input::get('payee')));
                // dd($v->getDirty());
@@ -272,7 +274,8 @@ class VoucherController extends BaseController{
         foreach($line_items as $lines){
             $item = new Particular;
             
-            $item->line_number = $lines['line_number']; 
+            $item->line_number = $lines['line_number'];
+            $item->ref_no = $lines['ref_no'];
             $item->item_desc = $lines['particular']; 
             $item->item_amount = $lines['amount'];
             
@@ -293,7 +296,8 @@ class VoucherController extends BaseController{
              $returninfo = 0;
              if($item){
                  
-                 $item->line_number = $line['line_number']; 
+                 $item->line_number = $line['line_number'];
+                 $item->ref_no = $line['ref_no'];
                  $item->item_desc = $line['item_desc']; 
                  $item->item_amount = $line['item_amount'];
                  
@@ -307,7 +311,8 @@ class VoucherController extends BaseController{
              else{
                  
                  $new_item = new Particular;
-                 $new_item->line_number = $line['line_number']; 
+                 $new_item->line_number = $line['line_number'];
+                 $new_item->ref_no = $line['ref_no'];
                  $new_item->item_desc = $line['item_desc']; 
                  $new_item->item_amount = $line['item_amount'];
                  
@@ -329,8 +334,9 @@ class VoucherController extends BaseController{
     private function prepareKeysfromInput($param) {
         $item_lines = array();
         for($line = 0; $line < count($param['particular']); $line++){
-           $item = array('line_number' => NULL, 'particular' => NULL, 'amount' => NULL);
+           $item = array('line_number' => NULL,'ref_no' => NULL, 'particular' => NULL, 'amount' => NULL);
            $item['line_number'] = $line;
+           $item['ref_no'] = $param['ref_no'][$line];
            $item['particular'] = $param['particular'][$line]; 
            $item['amount'] = $param['amount'][$line];
            array_push($item_lines,$item);
@@ -341,8 +347,9 @@ class VoucherController extends BaseController{
    private function prepareKeysfromDB($param){
        $item_lines = array();
         for($line = 0; $line < count($param['particular']); $line++){
-           $item = array('line_number' => NULL, 'item_desc' => NULL, 'item_amount' => NULL);
+           $item = array('line_number' => NULL, 'ref_no' => NULL, 'item_desc' => NULL, 'item_amount' => NULL);
            $item['line_number'] = $line;
+           $item['ref_no'] = $param['ref_no'];
            $item['item_desc'] = $param['particular'][$line]; 
            $item['item_amount'] = $param['amount'][$line];
            array_push($item_lines,$item);

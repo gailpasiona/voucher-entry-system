@@ -38,6 +38,13 @@
                                 </div>
                                 
                             </div>
+                            
+                            <div class="form-group row">
+                                <label for="cheque" class="col-md-4 control-label">Date of Cheque</label>
+                                <div class="col-md-6 check_date">
+                                    <input class="form-control datepicker" placeholder="MM/DD/YY" type="text" name="check_date" id="check_date" value="">
+                                </div>
+                            </div>
                             <div class="form-group row">
                                 
                                 <label for="bp_building" class="col-md-4 control-label">Bank</label>
@@ -98,8 +105,14 @@
     </div>
     
     <script>
+        
         $( document ).ready(function() {
             $('.modal-header').append('<h4 class="modal-title" id="myModalLabel2">New Record</h4>')
+            
+        });
+        
+        $(function() {
+            $( '.datepicker' ).datepicker();
         });
         
         $(".submitBtn").click(function(e){

@@ -66,6 +66,9 @@
     </div>
 
 @stop
+@section('styles')
+    <link rel="stylesheet" href="{{ URL::asset('//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css')}}" />
+@stop
 
 @section('scripts')
     
@@ -73,6 +76,8 @@
     <!-- Page-Level Plugin Scripts - Dashboard -->
     <script src="{{ URL::asset('js/plugins/morris/raphael-2.1.0.min.js')}}"></script>
     <script src="{{ URL::asset('js/plugins/morris/morris.js')}}"></script>
+    <script src="{{ URL::asset('//code.jquery.com/ui/1.11.0/jquery-ui.js')}}"></script>
+    
     <!--<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>-->
    <!-- Page-Level Demo Scripts - Dashboard - Use for reference
     <script src="{{ URL::asset('js/demo/dashboard-demo.js')}}"></script>-->
@@ -143,6 +148,7 @@ $('#edit_modal').on('hidden.bs.modal', function () {
        changes_flag = 0;
   }
   clearall();
+   $(this).empty();
 });
 
 $('#create_modal').on('hidden.bs.modal', function () {
@@ -153,6 +159,7 @@ $('#create_modal').on('hidden.bs.modal', function () {
        changes_flag = 0;
   }
   clearall();
+  $(this).empty();
 });
 
 
