@@ -61,7 +61,6 @@ class VoucherController extends BaseController{
         
         $particulars = Voucher::find($voucher_no)->particulars->toArray();
         
-        
         return View::make('forms.voucher_modify_ajax')->with('info', $record)
             ->with('partners', $partner)
                 ->with('particulars',$particulars);
@@ -163,7 +162,7 @@ class VoucherController extends BaseController{
         {
             $filter = Voucher::validate(Input::all());
         
-            $items = $this->prepareKeysfromInput(Input::only('particular', 'amount'));
+            $items = $this->prepareKeysfromInput(Input::only('ref_no', 'particular', 'amount'));
             
             if($filter->passes()) {
             
@@ -210,7 +209,7 @@ class VoucherController extends BaseController{
         $monitor_flag = NULL;
         if (Request::ajax())
         {
-            $partner = BusinessPartner::select('bp_id','bp_name')->get();
+            //$partner = BusinessPartner::select('bp_id','bp_name')->get();
             $filter = Voucher::validate(Input::all());
             //$record = $this->prepareRecord(Input::except('particular','amount'));
             //$particulars = $this->prepareKeysfromDB(Input::all());//only('particular', 'amount'));
@@ -228,8 +227,7 @@ class VoucherController extends BaseController{
                 if(count($v->getDirty()) > 0) /* avoiding resubmission of same content */
                 {
                     $v->push();
-                    //echo 'Post is updated!';
-                    //return Redirect::back()->with('success', 'Post is updated!');
+                    
                     $message = "Info Changes Committed, ";
                     $monitor_flag = 1;
                 }
@@ -349,7 +347,7 @@ class VoucherController extends BaseController{
         for($line = 0; $line < count($param['particular']); $line++){
            $item = array('line_number' => NULL, 'ref_no' => NULL, 'item_desc' => NULL, 'item_amount' => NULL);
            $item['line_number'] = $line;
-           $item['ref_no'] = $param['ref_no'];
+           $item['ref_no'] = $param['ref_no'][$line];
            $item['item_desc'] = $param['particular'][$line]; 
            $item['item_amount'] = $param['amount'][$line];
            array_push($item_lines,$item);

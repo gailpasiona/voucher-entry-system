@@ -52,7 +52,7 @@
                             <div class="form-group row">
                                 <label for="cheque" class="col-md-4 control-label">Date of Cheque</label>
                                 <div class="col-md-6 check_date">
-                                    <input class="form-control datepicker" placeholder="MM/DD/YYYY" type="text" name="check_date" id="check_date" value="">
+                                    <input class="form-control datepicker" placeholder="MM/DD/YYYY" type="text" name="check_date" id="check_date" value="{{{$info['check_date'] }}}">
                                 </div>
                                 
                             </div>
