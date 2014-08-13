@@ -13,6 +13,7 @@ class Voucher extends Eloquent {
         'bank'  =>  'required|alpha_spaces_letteronly',
         'check_number'  =>  'required|alpha_num',
         'check_date'    =>  'required|date',
+        'voucher_date'    =>  'required|date',
         'particular' => 'required',
     );
 
