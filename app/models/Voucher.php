@@ -37,7 +37,7 @@ class Voucher extends Eloquent {
         if(isset($input['particular'])){
             for($i=0;$i < count($input['particular']);$i++){
             $line = $i + 1;
-            static::$rules["ref_no.{$i}"] = 'required|alpha_num';
+            static::$rules["ref_no.{$i}"] = 'alpha_num';
             static::$rules["particular.{$i}"] = 'required|alpha_spaces';
             static::$rules["amount.{$i}"] = 'required|amount';
             $att["ref_no.{$i}"] = "Reference for Item No. " . "{$line}";
