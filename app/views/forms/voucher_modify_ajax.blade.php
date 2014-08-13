@@ -16,6 +16,14 @@
                                 </div>
                                 
                             </div>
+                            
+                            <div class="form-group row">
+                                <label for="voucher_date" class="col-md-4 control-label">Voucher Date</label>
+                                <div class="col-md-6 voucher_date">
+                                    <input class="form-control datepicker" placeholder="MM/DD/YY" type="text" name="voucher_date" id="voucher_date" value="{{{$info['voucher_date'] }}}">
+                                </div>
+                            </div>
+                            
                             <div class="form-group row">
                                 <label class="col-md-4 control-label" for="bp_street">Pay To</label>
                                 <div class="col-md-6">

@@ -24,12 +24,21 @@
                                 
                                
                             </div>
+                            
+                            <div class="form-group row">
+                                <label for="voucher_date" class="col-md-4 control-label">Voucher Date</label>
+                                <div class="col-md-6 voucher_date">
+                                    <input class="form-control datepicker" placeholder="MM/DD/YY" type="text" name="voucher_date" id="voucher_date" value="">
+                                </div>
+                            </div>
+                            
                             <div class="form-group row">
                                 <label for="bp_loc_building" class="col-md-4 control-label">Amount</label>
                                 <div class="col-md-6 total_amount">
                                     <input class="form-control" placeholder="Total Amount" type="text" name="total_amount" id="total_amount" value="">
                                 </div>
                             </div>
+                            
                             
                             <div class="form-group row">
                                 <label for="cheque" class="col-md-4 control-label">Cheque No</label>

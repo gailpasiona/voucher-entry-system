@@ -174,6 +174,7 @@ class VoucherController extends BaseController{
                 $voucher->total_amount = Input::get('total_amount');
                 $voucher->check_number = Input::get('check_number');
                 $voucher->check_date = Input::get('check_date');
+                $voucher->voucher_date = Input::get('voucher_date');
                 $voucher->bank = Input::get('bank');
 
                 $voucher->payto()->associate(BusinessPartner::find(Input::get('payee')));
@@ -221,6 +222,7 @@ class VoucherController extends BaseController{
                 $v->total_amount = Input::get('total_amount');
                 $v->check_number = Input::get('check_number');
                 $v->check_date = Input::get('check_date');
+                $v->voucher_date = Input::get('voucher_date');
                 $v->bank = Input::get('bank');
                 $v->payto()->associate(BusinessPartner::find(Input::get('payee')));
                // dd($v->getDirty());
