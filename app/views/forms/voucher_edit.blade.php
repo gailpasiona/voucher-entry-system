@@ -36,6 +36,7 @@
                 <th>Cheque No.</th>
                 <th>Bank</th>
                 <th>Pay To</th>
+                <!--<th>Status</th>-->
                 <th></th>
                 
             </tr>
@@ -44,10 +45,11 @@
                 <tr>	
                     <td></td>
                     <td></td>
-                    <td></td>	
                     <td></td>
                     <td></td>
                     <td></td>
+                    <td></td>
+                    <!--<td></td>-->
                 </tr>
                 </tbody>
     </table>
@@ -62,6 +64,10 @@
     </div>
 
     <div class="modal fade" id="create_modal" tabindex="-2" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+
+    </div>
+    
+    <div class="modal fade" id="approve_modal" tabindex="-3" role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true">
 
     </div>
 
@@ -99,13 +105,46 @@
                     null,
                     null,
                     null,
+                    //{ "bSortable": false },
                     { "bSortable": false },
                     ],
-                
+                "columnDefs": [
+                        {
+                            // The `data` parameter refers to the data for the cell (defined by the
+                            // `data` option, which defaults to the column being worked with, in
+                            // this case `data: 0`.
+//                            "render": function ( data, type, row ) {
+//                                switch(row[5]){
+//                                    case '0':
+//                                        return "Pending Approval";
+//                                        break;
+//                                    case '1':
+//                                        return "Pending Completion";
+//                                        break;
+//                                    case '2':
+//                                        return "Cleared";
+//                                        break;
+//                                    default:
+//                                        return "Status Unavailable";
+//                                        break;
+//                                }
+////                                if(row[3])
+////                                return data +' ('+ row[3]+')';
+////                                '<a href="" data-toggle="modal" data-target="#edit_modal" data-tooltip="tooltip" data-placement="top" title="Process"><i class="fa fa-thumbs-o-up fa-lg"></i></a>'
+//                            },
+                          //  "targets": 5
+                        },
+                       // { "visible": false,  "targets": [ 4 ] }
+                    ]
                 });
 //                $('<button id="refresh" class="btn btn-success btn-sm pull-left"> Refresh </button>').appendTo('div.dataTables_filter');
 //                $('<a href="#" class="btn btn-success btn-sm  navbar-btn"><i class="fa fa-file"></i> Add </a>').appendTo('div.dataTables_length');
-                 
+                 $('body').tooltip({
+                    selector: "[data-tooltip=tooltip]",
+                    container: "body"
+                });
+                
+                
         });
         
 //        $(document).ready(function() {
@@ -139,6 +178,18 @@
 //    return false;
 //  });
 //});
+$('a.gail').on('click', function(e) {
+    e.preventDefault();
+     //event.preventDefault(); 
+               //     $.ajax({
+               //        url: $(this).attr('href')
+               //        ,success: function(response) {
+               //            alert(response)
+               //        }
+               //     })
+               //     return false; //for good measure
+                   alert("hello");
+});
 
 $('#edit_modal').on('hidden.bs.modal', function () {
   $(this).removeData('bs.modal');
@@ -162,6 +213,20 @@ $('#create_modal').on('hidden.bs.modal', function () {
   $(this).empty();
 });
 
+$('#approve_modal').on('hidden.bs.modal', function () {
+     $(this).removeData(('bs.modal'));
+     if(changes_flag > 0){
+        var $lmTable = $("#records").dataTable( { bRetrieve : true } );
+        $lmTable.fnDraw();
+        changes_flag = 0;
+     }
+     clearall();
+     $(this).empty();
+});
+
+function processv(n){
+    alert(n);
+}
 
 //var request;
 //// bind to the submit event of our form

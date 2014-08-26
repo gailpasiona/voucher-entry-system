@@ -31,6 +31,10 @@ class Voucher extends Eloquent {
         return $this->belongsTo('User', 'created_by');
     }
     
+    public function signatories(){
+        return $this->hasMany('Approval', 'voucher_number');
+    }
+    
     public static function validate($input) {
         $att = array();
        //extra validation rules for dynamic fields

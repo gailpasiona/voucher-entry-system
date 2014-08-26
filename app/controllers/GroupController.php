@@ -59,21 +59,29 @@ class GroupController extends BaseController{
     public function update_user_role(){
         $groups = Role::select('id','name')->get();
         $users = User::select('id','username')->get();
-        $prev_role = null;
+        $message = null;
         $user = User::where('id',Input::get('user'))->first();
         $group = Role::where('id',Input::get('role'))->first();
         
-        foreach( $user->roles as $role ){
-            $prev_role = $role->name;
+        if(!$user->hasRole($group->name)){
+            $user->attachRole($group);
+            $message = "User's Role Updated!";
         }
+        else
+            $message = "User is already assigned to the role";
+            
         
-        $user->detachRole(Role::where('name',$prev_role)->first());
-        
-        $user->attachRole($group);
-        
+//        foreach( $user->roles as $role ){
+//            $prev_role = $role->name;
+//        }
+//        
+//        $user->detachRole(Role::where('name',$prev_role)->first());
+//        
+//        
+//        
         return View::make('groups.assign_to_group')->with('roles',$groups)
                 ->with('users',$users)
-            ->with('notice', "User role updated!");
+            ->with('notice', $message);
         
     }
     

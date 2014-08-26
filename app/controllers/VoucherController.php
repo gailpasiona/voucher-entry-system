@@ -34,9 +34,16 @@ class VoucherController extends BaseController{
     $vouchers = DB::table('business_partners')->join('vouchers','business_partners.bp_id','=','vouchers.payto_id')->
                 select('vouchers.voucher_number','vouchers.total_amount','vouchers.check_number',
                         'vouchers.bank','business_partners.bp_name');
-        //return Datatables::of($vouchers)->add_column('operations','<a href="{{ route("modifyVoucher", $voucher_number) }}"><i class="fa fa-pencil-square fa-lg"></i></a>')->make();
     
-        return Datatables::of($vouchers)->add_column('operations','<a href="{{ route("modifyVoucher", $voucher_number) }}" data-toggle="modal" data-target="#edit_modal"><i class="fa fa-pencil-square fa-lg"></i></a>')->make();
+        //return Datatables::of($vouchers)->add_column('operations','<a href="{{ route("modifyVoucher", $voucher_number) }}"><i class="fa fa-pencil-square fa-lg"></i></a>')->make();
+        // 
+        if(Confide::user()->can('approve_vouchers')){
+            return Datatables::of($vouchers)->add_column('operations','<a href="{{ route("modifyVoucher", $voucher_number) }}" data-toggle="modal" data-target="#edit_modal" data-tooltip="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil-square fa-lg"></i></a> &nbsp; '
+                    . '<a href="{{ route("approveVoucher", $voucher_number) }}" data-toggle="modal" data-target="#approve_modal" data-tooltip="tooltip" data-placement="top" title="Process"><i class="fa fa-thumbs-o-up fa-lg"></i></a>')->make();
+        }
+        else{
+            return Datatables::of($vouchers)->add_column('operations','<a href="{{ route("modifyVoucher", $voucher_number) }}" data-toggle="modal" data-target="#edit_modal" data-tooltip="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil-square fa-lg"></i></a>')->make();
+        }
     }
     
 //normal loading
@@ -57,11 +64,14 @@ class VoucherController extends BaseController{
     public function modify($voucher_no){
         $partner = BusinessPartner::select('bp_id','bp_name')->get();
          
-        $record = Voucher::find($voucher_no)->toArray();
+        $record = Voucher::find($voucher_no);
+        
+        $status = Approval::where('voucher_number','=',$voucher_no)->where('approved','=',1)->count();
         
         $particulars = Voucher::find($voucher_no)->particulars->toArray();
         
         return View::make('forms.voucher_modify_ajax')->with('info', $record)
+                ->with('status', $status)
             ->with('partners', $partner)
                 ->with('particulars',$particulars);
         
@@ -215,54 +225,62 @@ class VoucherController extends BaseController{
             //$record = $this->prepareRecord(Input::except('particular','amount'));
             //$particulars = $this->prepareKeysfromDB(Input::all());//only('particular', 'amount'));
             $v = Voucher::find(Input::get('voucher_number'));
-            
-            if($filter->passes()){
-                $particulars = $this->prepareKeysfromDB(Input::all());
-                
-                $v->total_amount = Input::get('total_amount');
-                $v->check_number = Input::get('check_number');
-                $v->check_date = Input::get('check_date');
-                $v->voucher_date = Input::get('voucher_date');
-                $v->bank = Input::get('bank');
-                $v->payto()->associate(BusinessPartner::find(Input::get('payee')));
-               // dd($v->getDirty());
-                if(count($v->getDirty()) > 0) /* avoiding resubmission of same content */
-                {
-                    $v->push();
-                    
-                    $message = "Info Changes Committed, ";
-                    $monitor_flag = 1;
-                }
-                else
-                    $message = "No Info Changes, ";
-                
-                if($this->updateItems($particulars, Input::get('voucher_number')) > 0){
-                    $message = $message . "Particulars updated!";
-                    if(is_null($monitor_flag)) 
+            $status = Approval::where('voucher_number','=',$v->voucher_number)->where('approved','=',1)->count();
+            if($status < 1){
+                if($filter->passes()){
+                    $particulars = $this->prepareKeysfromDB(Input::all());
+
+                    $v->total_amount = Input::get('total_amount');
+                    $v->check_number = Input::get('check_number');
+                    $v->check_date = Input::get('check_date');
+                    $v->voucher_date = Input::get('voucher_date');
+                    $v->bank = Input::get('bank');
+                    $v->payto()->associate(BusinessPartner::find(Input::get('payee')));
+                   // dd($v->getDirty());
+                    if(count($v->getDirty()) > 0) /* avoiding resubmission of same content */
+                    {
+                        $v->push();
+
+                        $message = "Info Changes Committed, ";
                         $monitor_flag = 1;
-                    else{
-                        if($monitor_flag == 0) $response['flag'] = 1; 
                     }
+                    else
+                        $message = "No Info Changes, ";
+
+                    if($this->updateItems($particulars, Input::get('voucher_number')) > 0){
+                        $message = $message . "Particulars updated!";
+                        if(is_null($monitor_flag)) 
+                            $monitor_flag = 1;
+                        else{
+                            if($monitor_flag == 0) $response['flag'] = 1; 
+                        }
+                    }
+
+                    else{
+                         $message = $message . "No changes in particulars";
+                         if(is_null($monitor_flag)) 
+                             $monitor_flag = 0;
+                    } 
+
+
+                    $response['status'] = "success";
+                    $response['msg'] = $message;
+                    $response['flag'] = $monitor_flag;
                 }
-                       
+
                 else{
-                     $message = $message . "No changes in particulars";
-                     if(is_null($monitor_flag)) 
-                         $monitor_flag = 0;
-                } 
-                   
-                
-                $response['status'] = "success";
-                $response['msg'] = $message;
-                $response['flag'] = $monitor_flag;
+                    $response['status'] = "success1";
+                    $response['msg'] = "validation error";
+                    $response['error'] = $filter->messages()->toJson();
+                    $response['flag'] = 0;
+                }
             }
-            
             else{
-                $response['status'] = "success1";
-                $response['msg'] = "validation error";
-                $response['error'] = $filter->messages()->toJson();
+                $response['status'] = "success2";
+                $response['msg'] = "Unable to commit changes. Voucher is already approved";
                 $response['flag'] = 0;
             }
+            
         
          return Response::json( $response );
         }
@@ -329,6 +347,160 @@ class VoucherController extends BaseController{
         
         
         return $returninfo;
+    }
+    
+    public function signatory(){
+        //var_dump(Confide::user()->id);
+//        $user = Confide::user();
+//        if(Confide::user()->can('complete_vouchers')) echo 'yes he can!';
+//        else echo 'no he cannot!';
+//        $users = Role::where('name','=','Superuser')->first()->users()->get();
+//        foreach($users as $user){
+//          echo $user->id . "\n";   
+//        }
+       // $e = $users->toArray();
+        //$voucher = Voucher::find($voucher_number);
+        $response = array('status' => NULL, 'msg'=> NULL, 'flag' => NULL);
+        $flag = NULL;
+        $message = NULL;
+        $status = NULL;
+        $voucher_number = Input::get('voucher_number');
+        if(Confide::user()->can('approve_vouchers')){
+//            $approvals = Approval::where('voucher_number','=',$voucher_number)
+//                    ->where('voucher_approver','=',Confide::user()->id)
+//                    ->where('approved','=',1)->count();
+            $approvals = Approval::where('voucher_number','=',$voucher_number)
+                    ->where('voucher_approver','=',Confide::user()->id)->count();
+                    //->where('approved','=',1)->count();
+           
+            if($approvals == 0){
+                $approver = new Approval;
+        
+                $approver->voucher_approver = Confide::user()->id;
+                
+                $approver->approved = 1;
+        
+                $voucher = Voucher::find($voucher_number);
+                
+                //$voucher->status = $voucher->status + 1;
+                
+                $voucher->signatories()->save($approver);
+                
+               // $voucher->save();
+                
+                $status = "success";
+                $message  = "Voucher Approved Successfully";
+                $flag = 1;
+                
+            }
+            else if($approvals > 0 ){
+                $approvals2 = Approval::where('voucher_number','=',$voucher_number)
+                    ->where('voucher_approver','=',Confide::user()->id)
+                        ->where('approved','=',0)->first();
+                $approvals2->approved = 1;
+                $approvals2->save();
+                
+                $status = "success";
+                $message  = "Voucher Approved Successfully";
+                $flag = 1;
+            }
+            else{
+               // echo $approvals;
+                
+                $status = "success1";
+                $message  = "Unable to proceed.You might have already approved this voucher";
+                $flag = 0;
+            }
+        }
+        else{
+            $status = "success1";
+            $message  = "Unable to proceed.Insufficient privileges";
+            $flag = 0;
+        }
+        
+        $response['status'] = $status;
+        $response['msg']  = $message;
+        $response['flag'] = $flag;
+        
+        return Response::json( $response );
+    }
+    
+    public function approve($voucher_number){
+        $status = array("approval" => NULL);//, "reopen" => NULL);
+        
+        $record = Voucher::find($voucher_number);//->get(array('voucher_number'));
+        
+        //$stats = Approval::where('voucher_number','=',$voucher_no)->where('approved','=',1)->count();
+        
+        $isApprovedby = Approval::where('voucher_number','=',$voucher_number)
+                ->where('voucher_approver','=',Confide::user()->id);
+                   // ->where('voucher_approver','=',Confide::user()->id)->count(); 
+         //echo($isApprovedby->count());
+        if($isApprovedby->count() > 0){
+            
+            $status["approval"] =  $isApprovedby->first()->approved;
+           
+        }
+        
+        else{
+            $status["approval"] = 0;
+        }
+        
+       
+        return View::make('forms.voucher_approval')->with('info', $record)
+                ->with('status', $status);
+    }
+    
+    public function reactivate(){
+        $response = array('status' => NULL, 'msg'=> NULL, 'flag' => NULL);
+        $flag = NULL;
+        $message = NULL;
+        $status = NULL;
+        $voucher_number = Input::get('voucher_number');
+        if(Confide::user()->can('approve_vouchers')){
+            $approvals = Approval::where('voucher_number','=',$voucher_number)
+                    ->where('voucher_approver','=',Confide::user()->id)
+                    ->where('approved','=',1)->first();
+            
+            if($approvals->count() == 0){
+//                $approver = $approvals->first();
+//        
+//                $approver->approved = 1;
+//        
+//                $voucher = Voucher::find($voucher_number);
+//                
+//                $voucher->status = $voucher->status + 1;
+//                
+//                $voucher->signatories()->save($approver);
+//                
+//                $voucher->save();
+//                
+                $status = "success1";
+                $message  = "Voucher is still active";
+                $flag = 0;
+                
+            }
+            else{
+               // echo $approvals;
+                
+                $approvals->approved = 0;
+                $approvals->save();
+                $status = "success";
+                $message  = "Voucher successfully re-activated";
+                $flag = 1;
+            }
+        }
+        else{
+            $status = "success1";
+            $message  = "Unable to proceed.Insufficient privileges";
+            $flag = 0;
+        }
+        
+        $response['status'] = $status;
+        $response['msg']  = $message;
+        $response['flag'] = $flag;
+        
+        return Response::json( $response );
     }
     
     private function prepareKeysfromInput($param) {

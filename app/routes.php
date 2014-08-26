@@ -47,6 +47,9 @@ Route::get('voucher/ajax',               'VoucherController@popTable');
 
 Route::get('voucher/create2', array('as' => 'createVoucher', 'uses' => 'VoucherController@create2'));
 
+Route::get('voucher/approval/{name}', array('as' => 'approveVoucher', 'uses' => 'VoucherController@approve'));
+Route::post('voucher/approve', array('as' => 'approvesVoucher', 'uses' => 'VoucherController@signatory'));
+Route::post('voucher/reactivate', array('as' => 'reopenVoucher', 'uses' => 'VoucherController@reactivate'));
 Route::get('voucher/modify/{name}', array('as' => 'modifyVoucher', 'uses' => 'VoucherController@modify'));
 Route::post('voucher/update',               'VoucherController@update');
 Route::post('voucher/updates', array('as' => 'updateVoucher', 'uses' => 'VoucherController@updates'));

@@ -33,7 +33,7 @@
                     </div>
                 @endif
 
-                @if ( Session::get('notice') )
+                @if ( isset($notice) )
 <!--                    <div class="alert">{{ Session::get('notice') }}</div>-->
                         <div class="alert">{{ $notice}}</div>
                 @endif

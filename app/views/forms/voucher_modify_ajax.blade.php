@@ -119,7 +119,9 @@
             </div>
 
           <button type="button" class="btn btn-default" id="dumer" data-dismiss="modal">Close</button>
-          <button type="button" id="submitBtn" class="btn btn-primary submitBtn">Save changes</button>
+          @if ($status < 1)
+            <button type="button" id="submitBtn" class="btn btn-primary submitBtn">Save Changes</button>
+          @endif
       </div>
     </div>
     
@@ -170,9 +172,12 @@
              $(".messages").append('<div class="message_content alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert">\n\
                 <span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>\n\
                 <strong>Errors Occured!</strong> '+prompt+' </div>');
-            
-             
-           
+         }
+         else if(data.status == 'success2'){
+                $( ".message_content" ).remove();
+                $(".messages").append('<div class="message_content alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert">\n\
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>\n\
+                    <strong>Ooops!</strong> '+data.msg+' </div>');
          }
          else{
              $( ".message_content" ).remove();//remove first if exists
