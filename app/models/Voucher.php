@@ -23,6 +23,10 @@ class Voucher extends Eloquent {
         return $this->hasMany('Particular', 'voucher_number');
     }
     
+    public function attachments(){
+        return $this->hasMany('Attachment', 'voucher_number');
+    }
+    
     public function payto(){
         return $this->belongsTo('BusinessPartner' , 'payto_id');
     }

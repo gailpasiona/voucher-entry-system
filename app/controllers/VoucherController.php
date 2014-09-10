@@ -70,10 +70,12 @@ class VoucherController extends BaseController{
         
         $particulars = Voucher::find($voucher_no)->particulars->toArray();
         
+        $attachments = Voucher::find($voucher_no)->attachments->toArray();
+        
         return View::make('forms.voucher_modify_ajax')->with('info', $record)
                 ->with('status', $status)
             ->with('partners', $partner)
-                ->with('particulars',$particulars);
+                ->with('particulars',$particulars)->with('attachments',$attachments);
         
     }
 
@@ -163,6 +165,127 @@ class VoucherController extends BaseController{
         }
         
     }
+    
+    public function attach(){
+        $file_max = ini_get('upload_max_filesize');
+        $file_max_str_leng = strlen($file_max);
+        $file_max_meassure_unit = substr($file_max,$file_max_str_leng - 1,1);
+        $file_max_meassure_unit = $file_max_meassure_unit == 'K' ? 'kb' : ($file_max_meassure_unit == 'M' ? 'mb' : ($file_max_meassure_unit == 'G' ? 'gb' : 'unidades'));
+        $file_max = substr($file_max,0,$file_max_str_leng - 1);
+        $file_max = intval($file_max);
+
+        //handle second case
+        if((empty($_FILES) && empty($_POST) && isset($_SERVER['REQUEST_METHOD']) && strtolower($_SERVER['REQUEST_METHOD']) == 'post'))
+        { //catch file overload error...
+             //grab the size limits...
+            return json_encode(array('success'=>false, 'message'=>sprintf('The file size should be lower than %s%s.',$file_max,$file_max_meassure_unit)));
+        }
+
+        try{
+
+            if (!Input::hasFile('file'))
+                return;
+
+            $utils = App::make('utils');
+            $file = Input::file('file');
+
+            $name = Input::get('name');
+            $size = $file->getSize();
+
+            if ($size > $file_max)
+                return json_encode(array('success'=>false, 'message'=>sprintf('El tamaño del archivo debe ser menor que %smb.',$file_max)));
+
+            $original_file_name = $file->getClientOriginalName();
+
+            $destination_directory = "";
+
+            $final_file_name = $utils->copy_file_to_location($file);       
+
+            return json_encode(array('success'=>true, 'file'=>$original_file_name));
+        }
+        catch (Exception $e)
+        {
+            //handle first case
+            return json_encode(array('success'=>false, 'message'=>sprintf('The file size should be lower than %s%s.',$file_max,$file_max_meassure_unit)));
+        }
+    }
+    
+    public function attachment($voucher_number){
+        // Form Validation
+	$valid_exts = array('jpeg', 'jpg', 'png', 'pdf'); // valid extensions
+        $max_size = 50000 * 1024; // max file size (5000kb)
+        //$path = public_path() . '/img/'; // upload directory
+        //$fileName = NULL;
+        $response = array();
+        if((empty($_FILES) && empty($_POST) && isset($_SERVER['REQUEST_METHOD']) && strtolower($_SERVER['REQUEST_METHOD']) == 'post'))
+        { //catch file overload error...
+             //grab the size limits...
+            //return json_encode(array('success'=>false, 'msg'=>'Upload failed! File too big, size must be lower than 5MB.'));
+            $data = array('status' => NULL, 'msg'=> NULL, 'exit'=> NULL);
+            $data['status'] = FALSE;
+            $data['msg'] = 'Upload failed! Total upload size too big, size must be lower than 5MB.';
+            $data['exit'] = TRUE;
+            return Response::json($data);
+            
+        }
+        else{
+            
+            // looking for format and size validity
+            //$name = $file->getClientOriginalName();
+            
+            $files = Input::file('files');
+            // We will store our uploads in public/uploads/basic
+            $assetPath = '/attachments' . '/' . $voucher_number;
+            $uploadPath = public_path($assetPath);
+            if(!File::exists($uploadPath)) {
+                // path does not exist
+                File::makeDirectory($uploadPath, $mode = 0777, true, true);
+            }
+            //$path = public_path().'/images/article/imagegallery/' . $galleryId;
+            
+            // We need an empty arry for us to put the files back into
+            $results = array();
+            foreach ($files as $file) {
+                $data = array('status' => NULL, 'msg'=> NULL , 'file' => NULL, 'name' => NULL);
+                $ext = $file->guessClientExtension();
+                // get size
+                $size = $file->getClientSize();
+                if (in_array($ext, $valid_exts) AND $size < $max_size){
+                    $name = $assetPath . '/' . $file->getClientOriginalName();
+                    $data['file'] = URL::to($name);
+                    $data['name'] = $file->getClientOriginalName();
+                    //$filename = compact('name');
+                    if($file->move($uploadPath, $file->getClientOriginalName())){
+                        $file_attach = new Attachment;
+                        $file_attach->voucher_number = $voucher_number;
+                        $file_attach->description = $file->getClientOriginalName();
+                        $file_attach->url = $name;
+                        $file_attach->save();
+                        
+                        $data['status'] = TRUE;
+                        $data['msg'] = 'Upload successful';
+                    }
+                    else {
+                        $data['status'] = FALSE;
+                        //$data['name'] = 'Upload Fail: Unknown error occurred!';
+                        $data['msg'] = 'Upload Fail: Unknown error occurred!';
+                    }
+                }
+                else{
+                    $data['status'] = FALSE;
+                    //$data['name'] = 'Upload Fail: Unsupported file format or It is too large to upload!';
+                    $data['msg'] = 'Upload Fail: Unsupported file format or It is too large to upload!';
+                }
+                array_push($response, $data);  
+            }
+        }
+        // echo out json encoded status
+//        return header('Content-type: application/json') . json_encode(array('status' => $status,
+//        'fileName' => $fileName));
+        return Response::json($response);
+    }
+        
+        
     
     public function saves(){
         //$bpid = Input::get( 'bp' );

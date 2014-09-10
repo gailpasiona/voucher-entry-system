@@ -53,6 +53,7 @@ Route::post('voucher/reactivate', array('as' => 'reopenVoucher', 'uses' => 'Vouc
 Route::get('voucher/modify/{name}', array('as' => 'modifyVoucher', 'uses' => 'VoucherController@modify'));
 Route::post('voucher/update',               'VoucherController@update');
 Route::post('voucher/updates', array('as' => 'updateVoucher', 'uses' => 'VoucherController@updates'));
+Route::post('voucher/attachment/{name}', array('as' => 'attachVoucher', 'uses' => 'VoucherController@attachment'));
 
 //print sql statements
 //Event::listen('illuminate.query', function($query)

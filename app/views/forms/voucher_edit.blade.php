@@ -22,37 +22,58 @@
 @if ( Session::has('notice') )
     <div class="alert">{{ Session::get('notice') }}</div>
 @endif-->
-<div class="col-md-12 row">
-    <a href="{{ route('createVoucher')}}" data-toggle="modal" data-target="#create_modal" class="btn btn-success btn-md pull-left navbar-btn"><span class="fa fa-file fa-md"></span> Add Record</a>
-    <!--/<a data-toggle="modal" class="btn btn-success btn-md pull-left" href="{{ route('createVoucher')}}" data-target="#create_modal"><span class="fa fa-file fa-md"></span>Click me !</a>-->
-</div>
-<div class="col-md-12"> 
-    <table id="records" class="table table-striped" cellspacing="0" width="100%">
+
+
+<!--<div class="col-md-12 row">
+    <a href="{{ route('createVoucher')}}" data-toggle="modal" data-target="#create_modal" class="btn btn-success btn-lg pull-right navbar-btn"><span class="fa fa-file fa-md"></span> Add Record</a>
+    /<a data-toggle="modal" class="btn btn-success btn-md pull-left" href="{{ route('createVoucher')}}" data-target="#create_modal"><span class="fa fa-file fa-md"></span>Click me !</a>
+</div>-->
+<div class="col-md-12 box">
+    
+    <div class="box-header">
+        <!--<a href="{{ route('createVoucher')}}" data-toggle="modal" data-target="#create_modal"><i class="fa fa-file fa-md"></i> Add Record</a>-->
+       <!--<h4 class="page-header">Vouchers List</h4>-->
+       <!--<a href="{{ route('createVoucher')}}" data-toggle="modal" data-target="#create_modal" class="page-header btn btn-success btn-lg pull-right navbar-btn"><span class="fa fa-file fa-md"></span> Add Record</a>-->
+    <div class="col-md-12 row header-grp">
+        <h3 class="col-md-6 pull-left">Vouchers List</h3>
+        <div class="col-md-6 pull-right">
+            <a href="{{ route('createVoucher')}}" data-toggle="modal" data-target="#create_modal" class="btn btn-primary btn-lg pull-right navbar-btn"><span class="fa fa-plus-circle fa-md">  Add Record</span></a>
+        </div>
+        
+        
+        <!--/<a data-toggle="modal" class="btn btn-success btn-md pull-left" href="{{ route('createVoucher')}}" data-target="#create_modal"><span class="fa fa-file fa-md"></span>Click me !</a>-->
+    </div>
+    </div> <!-- box header--> 
+
+    <div class="box-body table-responsive">
+        <table id="records" class="table table-bordered table-hover" cellspacing="0" width="100%">
        
-        <thead>
-            <tr>
-                <th>Voucher No.</th>
-                <th>Total Amount</th>
-                <th>Cheque No.</th>
-                <th>Bank</th>
-                <th>Pay To</th>
-                <!--<th>Status</th>-->
-                <th></th>
-                
-            </tr>
-        </thead>
-        	<tbody>
-                <tr>	
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <!--<td></td>-->
+            <thead>
+                <tr>
+                    <th>Voucher No.</th>
+                    <th>Total Amount</th>
+                    <th>Cheque No.</th>
+                    <th>Bank</th>
+                    <th>Pay To</th>
+                    <!--<th>Status</th>-->
+                    <th></th>
+
                 </tr>
-                </tbody>
-    </table>
+            </thead>
+                    <tbody>
+                    <tr>	
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <!--<td></td>-->
+                    </tr>
+                    </tbody>
+        </table>
+    </div>
+    
 </div>
 
                
@@ -83,6 +104,10 @@
     <script src="{{ URL::asset('js/plugins/morris/raphael-2.1.0.min.js')}}"></script>
     <script src="{{ URL::asset('js/plugins/morris/morris.js')}}"></script>
     <script src="{{ URL::asset('//code.jquery.com/ui/1.11.0/jquery-ui.js')}}"></script>
+    <script src="{{ URL::asset('js/jquery.iframe-transport.js')}}"></script>
+    <script src="{{ URL::asset('js/jquery.fileupload.js')}}"></script>
+    <script src="{{ URL::asset('js/jquery.ui.widget.js')}}"></script>
+    
     
     <!--<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>-->
    <!-- Page-Level Demo Scripts - Dashboard - Use for reference
