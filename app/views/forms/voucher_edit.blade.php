@@ -8,26 +8,7 @@
 
 {{-- content --}}
 @section('content')
-<!--@if ( $errors->count() > 0 )
-    <div class="alert alert-error alert-danger col-md-6 col-md-offset-3">
-        <h4 class="text-center">The following errors have occurred:</h4>
-        <ul>
-            @foreach( $errors->all() as $message )
-                <li>{{ $message }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
 
-@if ( Session::has('notice') )
-    <div class="alert">{{ Session::get('notice') }}</div>
-@endif-->
-
-
-<!--<div class="col-md-12 row">
-    <a href="{{ route('createVoucher')}}" data-toggle="modal" data-target="#create_modal" class="btn btn-success btn-lg pull-right navbar-btn"><span class="fa fa-file fa-md"></span> Add Record</a>
-    /<a data-toggle="modal" class="btn btn-success btn-md pull-left" href="{{ route('createVoucher')}}" data-target="#create_modal"><span class="fa fa-file fa-md"></span>Click me !</a>
-</div>-->
 <div class="col-md-12 box">
     
     <div class="box-header">
@@ -51,9 +32,9 @@
             <thead>
                 <tr>
                     <th>Voucher No.</th>
+                    <th>Voucher Date</th>
                     <th>Total Amount</th>
                     <th>Cheque No.</th>
-                    <th>Bank</th>
                     <th>Pay To</th>
                     <!--<th>Status</th>-->
                     <th></th>
@@ -108,11 +89,7 @@
     <script src="{{ URL::asset('js/jquery.fileupload.js')}}"></script>
     <script src="{{ URL::asset('js/jquery.ui.widget.js')}}"></script>
     
-    
-    <!--<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>-->
-   <!-- Page-Level Demo Scripts - Dashboard - Use for reference
-    <script src="{{ URL::asset('js/demo/dashboard-demo.js')}}"></script>-->
-   <script>
+    <script>
       var changes_flag = 0;
         $(document).ready(function() {
               $('#records').dataTable( {
@@ -162,9 +139,7 @@
                        // { "visible": false,  "targets": [ 4 ] }
                     ]
                 });
-//                $('<button id="refresh" class="btn btn-success btn-sm pull-left"> Refresh </button>').appendTo('div.dataTables_filter');
-//                $('<a href="#" class="btn btn-success btn-sm  navbar-btn"><i class="fa fa-file"></i> Add </a>').appendTo('div.dataTables_length');
-                 $('body').tooltip({
+                $('body').tooltip({
                     selector: "[data-tooltip=tooltip]",
                     container: "body"
                 });
