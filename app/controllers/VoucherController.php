@@ -668,6 +668,26 @@ class VoucherController extends BaseController{
    public function reporting(){
        return View::make('forms.voucher_reports');
    }
+   
+   public function getReport(){
+//       $hello = array();
+//       $row1 = array('voucher_no' => 'Gail', 'voucher_date' => '24', 'amount' => 'manila', 'cheque_no' => '0000000', 
+//           'cheque_date' => '0000/00/00','pay_to' => 'N/A', 'created_by' => 'N/A');
+//       $row2 = array('voucher_no' => 'Gails', 'voucher_date' => '25', 'amount' => 'manila', 'cheque_no' => '0000001', 
+//           'cheque_date' => '0000/00/01','pay_to' => 'N/A', 'created_by' => 'N/A');
+//       array_push($hello, $row1);
+//       array_push($hello, $row2);
+//       return Response::json($hello);
+       $report = DB::table('business_partners')->join('vouchers','business_partners.bp_id','=','vouchers.payto_id')->
+                select('vouchers.voucher_number','vouchers.voucher_date','vouchers.total_amount','vouchers.check_number',
+                        'business_partners.bp_name');
+       $record = DB::table('users')->join('vouchers', 'users.id', '=', 'vouchers.created_by')
+               ->join('business_partners', 'vouchers.payto_id', '=', 'business_partners.bp_id')
+            ->select('vouchers.voucher_number','vouchers.voucher_date','vouchers.total_amount','vouchers.check_number',
+                        'vouchers.check_date','business_partners.bp_name','users.username')->get();
+      // var_dump(json_encode($record));
+       return Response::json($record);
+    }
     
 }
 

@@ -114,21 +114,21 @@ var URL = {
                         <li>
                             <a href="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
-                        <li>
-                            <a href="{{{action('VoucherController@edit')}}}"><i class="fa fa-list fa-fw"></i> Voucher</a>
-                        </li>
 <!--                        <li>
+                            <a href="{{{action('VoucherController@edit')}}}"><i class="fa fa-list fa-fw"></i> Voucher</a>
+                        </li>-->
+                        <li>
                             <a href="#"><i class="fa fa-list fa-fw"></i> Vouchers<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="{{{action('VoucherController@create')}}}">Create Entry</a>
+                                    <a href="{{{action('VoucherController@edit')}}}">Create / Update</a>
                                 </li>
                                 <li>
-                                    <a href="{{{action('VoucherController@edit')}}}">Records List</a>
+                                    <a href="{{{action('VoucherController@reporting')}}}">Reports</a>
                                 </li>
                             </ul>
-                             /.nav-second-level 
-                        </li>-->
+                             <!--.nav-second-level--> 
+                        </li>
                         <li>
                             <a href="#"><i class="fa fa-wrench fa-fw"></i> Setup<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
