@@ -123,13 +123,6 @@
                     width: 200/3,
                     sortable: false
                 }, {
-                    field: 'check_date',
-                    title: 'Cheque Date',
-                    //align: 'right',
-                    //valign: 'bottom',
-                    width: 200/3,
-                    sortable: false
-                }, {
                     field: 'bp_name',
                     title: 'Pay To',
                     //align: 'right',
@@ -143,11 +136,36 @@
                     //valign: 'bottom',
                     width: 200/3,
                     sortable: false
+                },{
+                    field: 'status',
+                    title: 'Status',
+                    formatter: statusFormatter,
+                    //align: 'right',
+                    //valign: 'bottom',
+                    width: 200/3,
+                    sortable: false
                 }]
             });
 
     return false;
         });
+        
+        function statusFormatter(value) {
+        // 16777215 == ffffff in decimal
+        var status_name = null;
+            switch(value){
+                case '1':
+                    status_name = 'Pending';
+                    break;
+                case '2':
+                    status_name = 'Closed';
+                    break;
+                default:
+                    status_name = 'Open';
+                    break;
+            }
+            return status_name;
+        }   
             
     </script>
 @stop

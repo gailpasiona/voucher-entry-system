@@ -683,10 +683,15 @@ class VoucherController extends BaseController{
                         'business_partners.bp_name');
        $record = DB::table('users')->join('vouchers', 'users.id', '=', 'vouchers.created_by')
                ->join('business_partners', 'vouchers.payto_id', '=', 'business_partners.bp_id')
-            ->select('vouchers.voucher_number','vouchers.voucher_date','vouchers.total_amount','vouchers.check_number',
+               ->select('vouchers.voucher_number','vouchers.voucher_date','vouchers.total_amount','vouchers.check_number',
                         'vouchers.check_date','business_partners.bp_name','users.username')->get();
-      // var_dump(json_encode($record));
-       return Response::json($record);
+       $record2 = DB::table('vouchers')
+	->select(array('vouchers.voucher_number', 'vouchers.voucher_date', 'vouchers.check_number', 'vouchers.total_amount', 'business_partners.bp_name', 'users.username', DB::raw('(Select count(*) from voucher_Approval where voucher_number=vouchers.voucher_number and approved=1 group by voucher_number) as status')))
+	->join('business_partners', 'vouchers.payto_id', '=', 'business_partners.bp_id')
+        ->join('users', 'vouchers.created_by', '=', 'users.id')
+    	->get();//->group_by('vouchers.voucher_number')->get();
+       //var_dump(json_encode($record2));
+       return Response::json($record2);
     }
     
 }
