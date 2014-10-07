@@ -46,6 +46,11 @@
         </table>-->
         
     </div>
+@section('modal_edit')
+    <div class="modal fade" id="info_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  
+    </div>
+@stop
 
 
 @stop
@@ -93,7 +98,7 @@
                 showRefresh: true,
                 showColumns: true,
                 search: true,
-                showToggle: true,
+               //    showToggle: true,
                 pagination: true,
                 columns: [{
                     field: 'voucher_number',
@@ -144,6 +149,14 @@
                     //valign: 'bottom',
                     width: 200/3,
                     sortable: false
+                },{
+                    field: 'voucher_number',
+                    title: 'Info',
+                    formatter: urlFormatter,
+                    align: 'center',
+                    valign: 'center',
+                    width: 200/4,
+                    sortable: false
                 }]
             });
 
@@ -165,7 +178,15 @@
                     break;
             }
             return status_name;
-        }   
-            
+        }
+        
+        function urlFormatter(value){
+            return '<a href="more_info/'+ value +'" data-toggle="modal" data-target="#info_modal" data-tooltip="tooltip" data-placement="top" title="Payment Info"><i class="fa fa-info-circle fa-lg"></i></a>';
+        }
+         
+         $('body').tooltip({
+                    selector: "[data-tooltip=tooltip]",
+                    container: "body"
+                });
     </script>
 @stop

@@ -7,4 +7,8 @@ class Particular extends Eloquent {
     public function voucher(){
         return $this->belongsTo('Voucher', 'voucher_number');
     }
+    
+    public function receipt(){
+        return $this->hasMany('Receipt', 'particular_id');
+    }
 }

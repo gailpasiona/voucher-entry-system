@@ -72,10 +72,24 @@ class VoucherController extends BaseController{
         
         $attachments = Voucher::find($voucher_no)->attachments->toArray();
         
-        return View::make('forms.voucher_modify_ajax')->with('info', $record)
+        $ids = Particular::where('voucher_number','=',$voucher_no)->get(array('id'))->toArray();
+        if(array_count_values(array_flatten($ids)) > 0){
+            $receipts = Receipt::whereIn('particular_id', array_flatten($ids))->join('voucher_items', 'particular_id', '=', 'voucher_items.id')
+                    ->get(array('receipt_no','particular_id','voucher_items.item_desc','gross_amt','net_vat','ewt'))->toArray();
+            return View::make('forms.voucher_modify_ajax')->with('info', $record)
+                ->with('status', $status)
+            ->with('partners', $partner)
+                ->with('particulars',$particulars)->with('attachments',$attachments)->with('receipts',$receipts);
+           // var_dump($receipts);
+        }
+        else{
+            return View::make('forms.voucher_modify_ajax')->with('info', $record)
                 ->with('status', $status)
             ->with('partners', $partner)
                 ->with('particulars',$particulars)->with('attachments',$attachments);
+        }
+        
+        
         
     }
 
@@ -416,16 +430,23 @@ class VoucherController extends BaseController{
             $item = new Particular;
             
             $item->line_number = $lines['line_number'];
-            $item->ref_no = $lines['ref_no'];
+            //$item->ref_no = $lines['ref_no'];
             $item->item_desc = $lines['particular']; 
             $item->item_amount = $lines['amount'];
             
            // $item->voucher()->associate(Voucher::find($v_no));
             $item->voucher()->associate($record);
-            
             $item->save(); 
             
-           
+//            $item_receipt = new Receipt;
+//            $item_receipt->receipt_no = null;
+//            $item_receipt->gross_amt = null;
+//            $item_receipt->net_vat = null;
+//            $item_receipt->ewt = null;
+//                 
+//            $item->receipt()->save($item_receipt);
+            
+            
         }
     }
 
@@ -438,7 +459,7 @@ class VoucherController extends BaseController{
              if($item){
                  
                  $item->line_number = $line['line_number'];
-                 $item->ref_no = $line['ref_no'];
+                 //$item->ref_no = $line['ref_no'];
                  $item->item_desc = $line['item_desc']; 
                  $item->item_amount = $line['item_amount'];
                  
@@ -453,13 +474,21 @@ class VoucherController extends BaseController{
                  
                  $new_item = new Particular;
                  $new_item->line_number = $line['line_number'];
-                 $new_item->ref_no = $line['ref_no'];
+                // $new_item->ref_no = $line['ref_no'];
                  $new_item->item_desc = $line['item_desc']; 
                  $new_item->item_amount = $line['item_amount'];
                  
                  $new_item->voucher()->associate(Voucher::find($v_no));
                  
                  $new_item->save();
+                 
+//                 $item_receipt = new Receipt;
+//                 $item_receipt->receipt_no = null;
+//                 $item_receipt->gross_amt = null;
+//                 $item_receipt->net_vat = null;
+//                 $item_receipt->ewt = null;
+//                 
+//                 $new_item->receipt()->save($item_receipt);
                  
                  $returninfo = 1;
              }
@@ -470,6 +499,91 @@ class VoucherController extends BaseController{
         
         
         return $returninfo;
+    }
+    
+    public function receipt(){
+//        $record = DB::table('item_receipts')
+//	->select(array('voucher_items.id','voucher_items.line_number', 'voucher_items.item_desc', 'voucher_items.item_amount', 'item_receipts.receipt_no', 'item_receipts.gross_amt', 'item_receipts.net_vat', 'item_receipts.ewt'))
+//	->join('voucher_items', 'item_receipts.particular_id', '=', 'voucher_items.id')
+//        //->join('users', 'vouchers.created_by', '=', 'users.id')
+//        ->orderBy('voucher_items.line_number', 'asc')
+//    	->get();//->group_by('vouchers.voucher_number')->get();
+        $response = array("status"=>null,"msg"=>null,"data"=>null);
+        $voucher = Input::get('voucher');
+        $ids = Particular::where('voucher_number','=',$voucher)->get(array('id'))->toArray();
+        if(Receipt::whereIn('particular_id', array_flatten($ids))->count() > 0){
+            $response['status'] = 1;
+            $response['data'] = Receipt::whereIn('particular_id', array_flatten($ids))
+                    ->get(array('receipt_no','particular_id','gross_amt','net_vat','ewt'))->toArray();
+        }
+        else{
+             $response['status'] = 0;
+            $response['data'] = Voucher::where('voucher_number','=',$voucher)->with(array( 'particulars' => function($query){
+                    $query->select('voucher_number','id','line_number','item_desc','item_amount');
+                }))->get(array('voucher_number'))->toArray();
+        }    
+        
+
+//                echo(Receipt::whereIn('particular_id', array_flatten(Particular::where('voucher_number','=','2014-13')
+//                        ->get(array('id'))->toArray()))->count());
+
+       return Response::json($response);
+        //var_dump(Response::json($response['data']));
+    }
+    
+    public function post_receipt(){
+        $input = array();
+        $response = array('status' => NULL, 'msg'=> NULL , 'error' => NULL , 'flag' => NULL);
+        $monitor_flag = NULL;
+        $message = NULL;
+       // $input_data = array('id'=>null,'receipt'=>null,'gross'=>null,'vat'=>null,'ewt'=>null);
+        //dd(Input::all());
+        foreach($this->prepareReceiptKeys(Input::all()) as $line){
+           // $ctr = 0;
+            $item = Receipt::where('particular_id','=',$line['item_id'])->first();
+            //$returninfo = 0;
+             if($item){
+                 
+                 $item->receipt_no = $line['receipt_number'];
+                 $item->gross_amt = $line['gross_amount']; 
+                 $item->net_vat = $line['net_vat'];
+                 $item->ewt = $line['ewt'];
+                 
+                 if(count($item->getDirty()) > 0){
+                     $item->save();
+                     $monitor_flag = 1;
+                     //if(is_null($message)) 
+                         $message = "Changes Committed!";
+                 }
+                 else{
+                     if(is_null($message))
+                             $message = "No Changes Made..";
+                 }
+                     
+             }
+             
+             else{
+                 
+                 $new_item = new Receipt;
+                 $new_item->receipt_no = $line['receipt_number'];
+                 $new_item->gross_amt = $line['gross_amount']; 
+                 $new_item->net_vat = $line['net_vat'];
+                 $new_item->ewt = $line['ewt'];
+                 
+                 $new_item->particular()->associate(Particular::find($line['item_id']));
+                 
+                 $new_item->save();
+                 $monitor_flag = 1;
+                 $message = "Payment Info Saved!";
+             }
+             
+             //$ctr ++;
+        }
+        $response['status'] = "success";
+        $response['msg'] = $message;
+        $response['flag'] = $monitor_flag;
+        
+        return Response::json($response);
     }
     
     public function signatory(){
@@ -629,9 +743,10 @@ class VoucherController extends BaseController{
     private function prepareKeysfromInput($param) {
         $item_lines = array();
         for($line = 0; $line < count($param['particular']); $line++){
-           $item = array('line_number' => NULL,'ref_no' => NULL, 'particular' => NULL, 'amount' => NULL);
+//           $item = array('line_number' => NULL,'ref_no' => NULL, 'particular' => NULL, 'amount' => NULL);
+            $item = array('line_number' => NULL, 'particular' => NULL, 'amount' => NULL);
            $item['line_number'] = $line;
-           $item['ref_no'] = $param['ref_no'][$line];
+           //$item['ref_no'] = $param['ref_no'][$line];
            $item['particular'] = $param['particular'][$line]; 
            $item['amount'] = $param['amount'][$line];
            array_push($item_lines,$item);
@@ -642,11 +757,28 @@ class VoucherController extends BaseController{
    private function prepareKeysfromDB($param){
        $item_lines = array();
         for($line = 0; $line < count($param['particular']); $line++){
-           $item = array('line_number' => NULL, 'ref_no' => NULL, 'item_desc' => NULL, 'item_amount' => NULL);
+           //$item = array('line_number' => NULL, 'ref_no' => NULL, 'item_desc' => NULL, 'item_amount' => NULL);
+            $item = array('line_number' => NULL, 'item_desc' => NULL, 'item_amount' => NULL);
            $item['line_number'] = $line;
-           $item['ref_no'] = $param['ref_no'][$line];
+          // $item['ref_no'] = $param['ref_no'][$line];
            $item['item_desc'] = $param['particular'][$line]; 
            $item['item_amount'] = $param['amount'][$line];
+           array_push($item_lines,$item);
+        }
+       return $item_lines;
+   }
+   
+   private function prepareReceiptKeys($param){
+       $item_lines = array();
+        for($line = 0; $line < count($param['item_id']); $line++){
+           //$item = array('line_number' => NULL, 'ref_no' => NULL, 'item_desc' => NULL, 'item_amount' => NULL);
+            $item = array('item_id' => NULL, 'receipt_number' => NULL, 'gross_amount' => NULL, 'net_vat' => NULL, 'ewt' => NULL);
+           $item['item_id'] = $param['item_id'][$line];
+           $item['receipt_number'] = $param['receipt_number'][$line]; 
+           $item['gross_amount'] = $param['gross_amount'][$line];
+           $item['net_vat'] = $param['vat_amount'][$line];
+           $item['ewt'] = $param['ewt_amount'][$line];
+           
            array_push($item_lines,$item);
         }
        return $item_lines;
@@ -670,28 +802,25 @@ class VoucherController extends BaseController{
    }
    
    public function getReport(){
-//       $hello = array();
-//       $row1 = array('voucher_no' => 'Gail', 'voucher_date' => '24', 'amount' => 'manila', 'cheque_no' => '0000000', 
-//           'cheque_date' => '0000/00/00','pay_to' => 'N/A', 'created_by' => 'N/A');
-//       $row2 = array('voucher_no' => 'Gails', 'voucher_date' => '25', 'amount' => 'manila', 'cheque_no' => '0000001', 
-//           'cheque_date' => '0000/00/01','pay_to' => 'N/A', 'created_by' => 'N/A');
-//       array_push($hello, $row1);
-//       array_push($hello, $row2);
-//       return Response::json($hello);
-       $report = DB::table('business_partners')->join('vouchers','business_partners.bp_id','=','vouchers.payto_id')->
-                select('vouchers.voucher_number','vouchers.voucher_date','vouchers.total_amount','vouchers.check_number',
-                        'business_partners.bp_name');
-       $record = DB::table('users')->join('vouchers', 'users.id', '=', 'vouchers.created_by')
-               ->join('business_partners', 'vouchers.payto_id', '=', 'business_partners.bp_id')
-               ->select('vouchers.voucher_number','vouchers.voucher_date','vouchers.total_amount','vouchers.check_number',
-                        'vouchers.check_date','business_partners.bp_name','users.username')->get();
-       $record2 = DB::table('vouchers')
+       $record = DB::table('vouchers')
 	->select(array('vouchers.voucher_number', 'vouchers.voucher_date', 'vouchers.check_number', 'vouchers.total_amount', 'business_partners.bp_name', 'users.username', DB::raw('(Select count(*) from voucher_Approval where voucher_number=vouchers.voucher_number and approved=1 group by voucher_number) as status')))
 	->join('business_partners', 'vouchers.payto_id', '=', 'business_partners.bp_id')
         ->join('users', 'vouchers.created_by', '=', 'users.id')
+        ->orderBy('vouchers.voucher_number', 'asc')
     	->get();//->group_by('vouchers.voucher_number')->get();
        //var_dump(json_encode($record2));
-       return Response::json($record2);
+       
+        return Response::json($record);
+    }
+    
+    public function getReportDetails($voucher){
+        $response = Voucher::where('voucher_number','=',$voucher)->with(array( 'particulars' => function($query){
+                    $query->with(array('receipt' => function($q){
+                            $q->select('receipt_no', 'gross_amt', 'net_vat', 'ewt', 'particular_id');
+                    }));
+                    $query->select('voucher_number','id','line_number','item_desc','item_amount');
+                }))->get(array('voucher_number'))->toArray();
+        return View::make('forms.voucher_report_single')->with('data',$response);//Response::json($response);       
     }
     
 }

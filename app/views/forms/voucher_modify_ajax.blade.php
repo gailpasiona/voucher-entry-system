@@ -7,6 +7,7 @@
         <ul class="nav nav-tabs" role="tablist">
             <li class="active"><a href="#details" role="tab" data-toggle="tab">Details</a></li>
             <li><a href="#attachments" role="tab" data-toggle="tab">Attachments</a></li>
+            <li><a href="#receipts" role="tab" data-toggle="tab">Item Receipts</a></li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="details">
@@ -91,18 +92,18 @@
                                         @if ( !empty($particulars))
                                             @foreach( $particulars as $items)
                                                 <div id="rowNum{{{ $items['line_number'] }}}">
-                                                    <div class="col-md-3 ref_no">
+<!--                                                    <div class="col-md-3 ref_no">
                                                         <span class="col-md-1 control-label">Ref</span>
                                                         <input type="text" class="form-control" id="ref_no[]" name="ref_no[]" placeholder="Ref" value="{{{ $items['ref_no'] }}}">
-                                                    </div>
-                                                    <div class="col-md-5 particulars">
+                                                    </div>-->
+                                                    <div class="col-md-7 particulars">
                                                         <span class="col-md-1 control-label">Description</span>
                                                         <input type="text" class="form-control" id="particular[]" name="particular[]" placeholder="Item Description" value="{{{ $items['item_desc'] }}}">
                                                     </div>
-                                                    <div class="col-md-3 amounts"><span class="col-md-1 control-label">Amount</span>
+                                                    <div class="col-md-4 amounts"><span class="col-md-1 control-label">Amount</span>
                                                         <input type="text" class="form-control" id="amount[]" name="amount[]" placeholder="Amount" value="{{{ $items['item_amount'] }}}">
                                                     </div>
-                                                    <!---->                                        <div class="col-md-1"> <span class="col-md-1 control-label"><br /></span><input class="btn btn-primary btn-block" type="button" value="-" onclick="removeRow('{{{ $items['line_number'] }}}');">
+                                                    <!---->                                        <div class="col-md-1"> <span class="col-md-1 control-label"><br /></span><input class="btn btn-primary btn-block" type="button" value="x" onclick="removeRow('{{{ $items['line_number'] }}}');">
                                                     </div>
                                                 </div>
                                             @endforeach
@@ -112,16 +113,6 @@
                             </fieldset>
                     </form>
                     <div class="button_div">
-<!--                        <div class="progress progress-striped f_bar">
-
-                            <div class="progress-bar bar f_bar" style="width: 0%;">
-                     
-                                <span class="prog_txt">Please Wait</span>
-
-                            </div>
-
-                        </div>-->
-
                         <div class="pull-right">
                             <button type="button" class="btn btn-default" id="dumer" data-dismiss="modal">Close</button>
                             @if ($status < 1)
@@ -135,31 +126,12 @@
                 <div class="file_messages"> </div>
                 <form class="form-horizontal" id="attachform" role="form" method="POST" action="{{{ action('VoucherController@updates') }}}" accept-charset="UTF-8" enctype="multipart/form-data">
                             <fieldset>
-<!--                                <div id="attach_ref" class="form-group">
-                                    <div class="col-md-12">
-                                        <div class="col-md-8 col-md-offset-2">
-                                            <input class="btn btn-primary btn-block" onclick="addRow(this.form);" type="button" value="Add Attachment" />
-                                        </div>
-                                    </div>
-                                </div>   -->
                                 <div class="col-md-12">
                                     <div>
-                                        <!--<div class="input-group">-->
-                                            <!--<span class="input-group-btn">-->
                                                 <span class="btn btn-block btn-primary btn-file">
                                                     Add Attachment(s)&hellip; <input id="fileupload" type="file" name="files[]" multiple>
                                                 </span>
-                                            <!--</span>-->
-                                            <!--<input id="files_label" type="text" class="form-control" readonly>-->
-                                        <!--</div>-->
                                     </div>
-<!--                                    <div class="col-md-4">
-                                        <button type="button" id="attachBtn" class="btn btn-primary attachBtn">Upload File</button>
-                                    </div>-->
-<!--                                    <p>Upload progress</p>
-                                    <div id="progression" class="progress progress-success progress-striped">
-                                      <div class="progress-bar bar f_bar"></div>
-                                    </div>-->
                                 </div>
                                 
                             </fieldset>
@@ -168,11 +140,7 @@
                     <p></p>
                     <!--<p>Attachments: </p>-->
                     <ul id="files">
-                        <!--<a href="#">{{ HTML::image("attachments/IMAG1283.jpg", "Logo") }}</a>-->
-    <!--                    <li>{{link_to_asset('attachments/IMAG1283.jpg', 'picture', $attributes = array(), $secure = null)}}</li>
-                        <li>{{link_to_asset('attachments/IMAG1283.jpg', 'picture', $attributes = array('target' => '_new'), $secure = null)}}</li>-->
-                            <!--{{{var_dump($attachments)}}}-->
-                            @if ( !empty($attachments))
+                        @if ( !empty($attachments))
                                 @foreach( $attachments as $file)
                                 <!--<li>{{link_to_asset($file['url'], 'Attachment', $attributes = array('target' => '_new'), $secure = null)}}</li>-->
                                 <li><a href="{{{URL::to($file['url'])}}}" target="_new">{{{$file['description']}}}</a></li>
@@ -180,6 +148,55 @@
                             @endif
                     </ul>
                 </div>
+            </div>
+            <div class="tab-pane" id="receipts">
+                <div class="payinfo_messages"> </div>
+                @if (empty($receipts))
+                    <div>
+                        <button type="button" id="genReceipt" class="btn btn-block btn-primary">Generate Receipt(s)</button>
+                    </div>
+                    <br />
+                    <div>
+                        <form class="form-horizontal" id="receiptform" role="form" method="POST" accept-charset="UTF-8">
+                            <fieldset>
+                                <div id="receipt_details">
+                                </div>
+                            </fieldset>
+                        </form>
+                        <div class="button_div">
+                            <button type="button" class="btn btn-block btn-primary submitRct" disabled="true">Post Receipt(s)</button>
+                        </div>
+                    </div>
+                @else
+                 <form class="form-horizontal" id="receiptform" role="form" method="POST" accept-charset="UTF-8">
+                            <fieldset>
+                                <div id="receipt_details">
+                    @foreach($receipts as $receipt)
+                    
+                                    <div class="col-md-6">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">{{{$receipt['item_desc'] }}}</div>
+                                                <div class="panel-body">
+                                                    <input class="form-control" type="hidden" name="item_id[]" id="item_id[]" value="{{{$receipt['particular_id'] }}}" readonly="readonly">
+                                                    <input class="form-control" placeholder="Receipt No" name="receipt_number[]" id="receipt_number[]" value="{{{$receipt['receipt_no']}}}">
+                                                    <br />
+                                                    <input class="form-control" placeholder="Gross Amount" type="text" name="gross_amount[]" id="gross_amount[]" value="{{{$receipt['gross_amt']}}}">
+                                                    <br />
+                                                    <input class="form-control" placeholder="Net of VAT" type="text" name="vat_amount[]" id="vat_amount[]" value="{{{$receipt['net_vat']}}}">
+                                                    <br />
+                                                    <input class="form-control" placeholder="EWT" type="text" name="ewt_amount[]" id="ewt_amount[]" value="{{{$receipt['ewt']}}}">
+                                                </div>
+                                        </div>
+                                    </div>
+                    @endforeach
+                                </div>
+                            </fieldset>
+                     </form>
+                        <div class="button_div">
+                            <button type="button" id="submitRct" class="btn btn-block btn-primary submitRct">Post Payment Info</button>
+                    </div>            
+                @endif
+                
             </div>
         </div>
         
@@ -242,7 +259,7 @@
             dataType: 'json',
             done: function (e, data) {
                 // Add each uploaded file name to the #files list
-                console.log(data.result.msg);
+                //console.log(data.result.msg);
                 if(!data.result.exit){
                     $.each(data.result, function (index, file) {
                     if(file.status){
@@ -342,6 +359,77 @@
     
     
 });
-
+    $('#genReceipt').click(function(e){
+        console.log('hahaha');
+        var record = {voucher: $('#voucher_number').val()};
+        var request = $.ajax({
+            url: "receipts",
+            type: "POST",
+            data: record,
+            dataType: "json"
+        });
+        
+        request.done(function( data ) {
+           //alert(data[0].voucher_number);
+           $('#receipt_details').empty();
+           if(data.status > 0){
+           
+           }
+           else{
+               $.each(data.data[0].particulars, function (index, data) {
+//               
+                    $('#receipt_details').append('<div class="col-md-6"><div class="panel panel-default"><div class="panel-heading">'+data.item_desc+'</div>\n\
+                                                 <div class="panel-body"><input class="form-control" placeholder="Receipt No" name="receipt_number[]" id="receipt_number[]" value="">\n\
+                                                      <br /><input class="form-control" placeholder="Gross Amount" type="text" name="gross_amount[]" id="gross_amount[]" value="'+data.item_amount+'">\n\
+                                                      <br /><input class="form-control" placeholder="Net of VAT" type="text" name="vat_amount[]" id="vat_amount[]" value="">\n\
+                                                      <br /><input class="form-control" placeholder="EWT" type="text" name="ewt_amount[]" id="ewt_amount[]" value="">\n\
+                                                      <input class="form-control" type="hidden" name="item_id[]" id="item_id[]" value="'+data.id+'" readonly="readonly">\n\
+                                                 </div></div></div>');
+                });
+                
+//                $('#receipt_details').append('<div class="button_div"><button type="button" class="btn btn-block btn-primary submitRct">Post Receipt(s)</button></div>');
+           }
+           $(".submitRct").prop("disabled", false);
+        });
+        
+        request.fail(function( jqXHR, textStatus ) {
+        
+        });
+        $("#genReceipt").remove();
+    });
+    
+    $('.submitRct').click(function(e){
+        //console.log('hahahar');
+        $(".f_bar").addClass( "active" );
+        $(".bar").css("width", "0%");
+       
+        $("#receiptform :input").prop("readonly", true);
+        $("#submitRct").prop("disabled", true);
+        var request = $.ajax({
+            url: "receipts/post",
+            type: "POST",
+            data: $("#receiptform").serialize(),
+            dataType: "json"
+        });
+        
+        request.done(function( data ) {
+            $("#receiptform :input").prop("readonly", false);
+            $("#submitRct").prop("disabled", false);
+            $(".bar").css("width", "100%");
+            $(".f_bar").removeClass( "active" );
+            $(".prog_txt").hide();
+            
+            $( ".payinfo_message_content" ).remove();
+            
+            $(".payinfo_messages").append('<div class="payinfo_message_content alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert">\n\
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>\n\
+                     <strong></strong> '+data.msg+' </div>');
+        });
+        
+        request.fail(function( jqXHR, textStatus ) {
+        
+        });
+    });
+    
 </script>
 

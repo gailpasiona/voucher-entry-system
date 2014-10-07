@@ -57,6 +57,9 @@ Route::post('voucher/attachment/{name}', array('as' => 'attachVoucher', 'uses' =
 
 Route::get('voucher/report', array('as' => 'voucherReports', 'uses' => 'VoucherController@reporting'));
 Route::any('voucher/get_report', array('as' => 'getRepors', 'uses'=> 'VoucherController@getReport'));
+Route::any('voucher/more_info/{voucher}', array('as' => 'getDetail', 'uses'=> 'VoucherController@getReportDetails'));
+Route::any('voucher/receipts', array('as' => 'getRec', 'uses'=> 'VoucherController@receipt'));
+Route::post('voucher/receipts/post', array('as' => 'postRec', 'uses' => 'VoucherController@post_receipt'));
 //print sql statements
 //Event::listen('illuminate.query', function($query)
 //{
