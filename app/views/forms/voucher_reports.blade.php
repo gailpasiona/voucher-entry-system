@@ -115,41 +115,41 @@
                         columns: [{
                             field: 'voucher_number',
                             title: 'Voucher Number',
-                            //align: 'right',
+                            align: 'center',
                             sortable: true,
-                            width: 200/2
+                            width: 200/4
                         }, {
                             field: 'voucher_date',
                             title: 'Voucher Date',
-                            //align: 'right',
+                            align: 'center',
                             //valign: 'bottom',
                             width: 200/4,
                             sortable: true
                         }, {
                             field: 'total_amount',
                             title: 'Amount',
-                            //align: 'right',
+                            align: 'center',
                             //valign: 'bottom',
                             width: 200/3,
                             sortable: false
                         }, {
                             field: 'check_number',
                             title: 'Cheque No',
-                            //align: 'right',
+                            align: 'center',
                             //valign: 'bottom',
                             width: 200/3,
                             sortable: false
                         }, {
                             field: 'bp_name',
                             title: 'Pay To',
-                            //align: 'right',
+                            align: 'center',
                             //valign: 'bottom',
                             width: 200/3,
                             sortable: false
                         }, {
                             field: 'username',
                             title: 'Created By',
-                            //align: 'right',
+                            align: 'center',
                             //valign: 'bottom',
                             width: 200/3,
                             sortable: false
@@ -157,7 +157,7 @@
                             field: 'status',
                             title: 'Status',
                             formatter: statusFormatter,
-                            //align: 'right',
+                            align: 'center',
                             //valign: 'bottom',
                             width: 200/3,
                             sortable: false
@@ -184,34 +184,34 @@
                         columns: [{
                             field: 'voucher_number',
                             title: 'Voucher Number',
-                            //align: 'right',
+                            align: 'center',
                             sortable: true,
-                            width: 200/2
+                            width: 200/5
                         }, {
                             field: 'voucher_date',
                             title: 'Voucher Date',
-                            //align: 'right',
+                            align: 'center',
                             //valign: 'bottom',
                             width: 200/4,
                             sortable: true
                         }, {
                             field: 'total_amount',
                             title: 'Amount',
-                            //align: 'right',
+                            align: 'center',
                             //valign: 'bottom',
                             width: 200/3,
                             sortable: false
                         }, {
                             field: 'check_number',
                             title: 'Cheque No',
-                            //align: 'right',
+                            align: 'center',
                             //valign: 'bottom',
                             width: 200/3,
                             sortable: false
                         }, {
                             field: 'bp_name',
                             title: 'Pay To',
-                            //align: 'right',
+                            align: 'center',
                             //valign: 'bottom',
                             width: 200/3,
                             sortable: false
@@ -226,6 +226,13 @@
                         },{
                             field: 'item_amount',
                             title: 'Item Amount',
+                            align: 'center',
+                            valign: 'center',
+                            width: 200/4,
+                            sortable: false
+                        },{
+                            field: 'ref_no',
+                            title: 'Reference',
                             align: 'center',
                             valign: 'center',
                             width: 200/4,

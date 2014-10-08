@@ -17,7 +17,7 @@
 
 @yield('styles')
 {{ HTML::style('css/app.css') }}
-
+{{ HTML::style('css/forms.css')}}
 {{HTML::style("css/plugins/morris/morris-0.4.3.min.css")}}
 {{HTML::style("css/plugins/timeline/timeline.css")}}
 <!--{{HTML::style("css/sb-admin.css")}}-->
