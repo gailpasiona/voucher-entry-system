@@ -7,7 +7,7 @@
         <ul class="nav nav-tabs" role="tablist">
             <li class="active"><a href="#details" role="tab" data-toggle="tab">Details</a></li>
             <li><a href="#attachments" role="tab" data-toggle="tab">Attachments</a></li>
-            <li><a href="#receipts" role="tab" data-toggle="tab">Item Receipts</a></li>
+            <!--<li><a href="#receipts" role="tab" data-toggle="tab">Item Receipts</a></li>-->
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="details">
@@ -96,12 +96,21 @@
                                                         <span class="col-md-1 control-label">Ref</span>
                                                         <input type="text" class="form-control" id="ref_no[]" name="ref_no[]" placeholder="Ref" value="{{{ $items['ref_no'] }}}">
                                                     </div>-->
-                                                    <div class="col-md-7 particulars">
+                                                    <div class="col-md-3 particulars">
                                                         <span class="col-md-1 control-label">Description</span>
                                                         <input type="text" class="form-control" id="particular[]" name="particular[]" placeholder="Item Description" value="{{{ $items['item_desc'] }}}">
                                                     </div>
-                                                    <div class="col-md-4 amounts"><span class="col-md-1 control-label">Amount</span>
+                                                    <div class="col-md-2 amounts"><span class="col-md-1 control-label">Amount</span>
                                                         <input type="text" class="form-control" id="amount[]" name="amount[]" placeholder="Amount" value="{{{ $items['item_amount'] }}}">
+                                                    </div>
+                                                    <div class="col-md-2 amounts"><span class="col-md-1 control-label">Reference</span>
+                                                        <input type="text" class="form-control" id="ref_no[]" name="ref_no[]" placeholder="Reference" value="{{{ $items['ref_no'] }}}">
+                                                    </div>
+                                                    <div class="col-md-2 amounts"><span class="col-md-1 control-label">VAT</span>
+                                                        <input type="text" class="form-control" id="net_vat[]" name="net_vat[]" placeholder="VAT" value="{{{ $items['net_vat'] }}}">
+                                                    </div>
+                                                    <div class="col-md-2 amounts"><span class="col-md-1 control-label">EWT</span>
+                                                        <input type="text" class="form-control" id="ewt[]" name="ewt[]" placeholder="EWT" value="{{{ $items['ewt'] }}}">
                                                     </div>
                                                     <!---->                                        <div class="col-md-1"> <span class="col-md-1 control-label"><br /></span><input class="btn btn-primary btn-block" type="button" value="x" onclick="removeRow('{{{ $items['line_number'] }}}');">
                                                     </div>
@@ -149,7 +158,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="tab-pane" id="receipts">
+<!--            <div class="tab-pane" id="receipts">
                 <div class="payinfo_messages"> </div>
                 @if (empty($receipts))
                     <div>
@@ -197,7 +206,7 @@
                     </div>            
                 @endif
                 
-            </div>
+            </div>-->
         </div>
         
       </div>

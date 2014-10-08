@@ -73,21 +73,21 @@ class VoucherController extends BaseController{
         $attachments = Voucher::find($voucher_no)->attachments->toArray();
         
         $ids = Particular::where('voucher_number','=',$voucher_no)->get(array('id'))->toArray();
-        if(array_count_values(array_flatten($ids)) > 0){
-            $receipts = Receipt::whereIn('particular_id', array_flatten($ids))->join('voucher_items', 'particular_id', '=', 'voucher_items.id')
-                    ->get(array('receipt_no','particular_id','voucher_items.item_desc','gross_amt','net_vat','ewt'))->toArray();
-            return View::make('forms.voucher_modify_ajax')->with('info', $record)
-                ->with('status', $status)
-            ->with('partners', $partner)
-                ->with('particulars',$particulars)->with('attachments',$attachments)->with('receipts',$receipts);
-           // var_dump($receipts);
-        }
-        else{
+//        if(array_count_values(array_flatten($ids)) > 0){
+//            $receipts = Receipt::whereIn('particular_id', array_flatten($ids))->join('voucher_items', 'particular_id', '=', 'voucher_items.id')
+//                    ->get(array('receipt_no','particular_id','voucher_items.item_desc','gross_amt','net_vat','ewt'))->toArray();
+//            return View::make('forms.voucher_modify_ajax')->with('info', $record)
+//                ->with('status', $status)
+//            ->with('partners', $partner)
+//                ->with('particulars',$particulars)->with('attachments',$attachments)->with('receipts',$receipts);
+//           // var_dump($receipts);
+//        }
+//        else{
             return View::make('forms.voucher_modify_ajax')->with('info', $record)
                 ->with('status', $status)
             ->with('partners', $partner)
                 ->with('particulars',$particulars)->with('attachments',$attachments);
-        }
+       // }
         
         
         
@@ -309,7 +309,7 @@ class VoucherController extends BaseController{
         {
             $filter = Voucher::validate(Input::all());
         
-            $items = $this->prepareKeysfromInput(Input::only('ref_no', 'particular', 'amount'));
+            $items = $this->prepareKeysfromInput(Input::only('ref_no', 'particular', 'amount', 'net_vat', 'ewt'));
             
             if($filter->passes()) {
             
@@ -403,7 +403,7 @@ class VoucherController extends BaseController{
                     $response['status'] = "success";
                     $response['msg'] = $message;
                     $response['flag'] = $monitor_flag;
-                }
+                }           
 
                 else{
                     $response['status'] = "success1";
@@ -430,7 +430,9 @@ class VoucherController extends BaseController{
             $item = new Particular;
             
             $item->line_number = $lines['line_number'];
-            //$item->ref_no = $lines['ref_no'];
+            $item->ref_no = $lines['ref_no'];
+            $item->net_vat = $lines['net_vat'];
+            $item->ewt = $lines['ewt'];
             $item->item_desc = $lines['particular']; 
             $item->item_amount = $lines['amount'];
             
@@ -459,7 +461,9 @@ class VoucherController extends BaseController{
              if($item){
                  
                  $item->line_number = $line['line_number'];
-                 //$item->ref_no = $line['ref_no'];
+                 $item->ref_no = $line['ref_no'];
+                 $item->net_vat = $line['net_vat'];
+                 $item->ewt = $line['ewt'];
                  $item->item_desc = $line['item_desc']; 
                  $item->item_amount = $line['item_amount'];
                  
@@ -474,7 +478,9 @@ class VoucherController extends BaseController{
                  
                  $new_item = new Particular;
                  $new_item->line_number = $line['line_number'];
-                // $new_item->ref_no = $line['ref_no'];
+                 $new_item->ref_no = $line['ref_no'];
+                 $new_item->net_vat = $line['net_vat'];
+                 $new_item->ewt = $line['ewt'];
                  $new_item->item_desc = $line['item_desc']; 
                  $new_item->item_amount = $line['item_amount'];
                  
@@ -744,9 +750,12 @@ class VoucherController extends BaseController{
         $item_lines = array();
         for($line = 0; $line < count($param['particular']); $line++){
 //           $item = array('line_number' => NULL,'ref_no' => NULL, 'particular' => NULL, 'amount' => NULL);
-            $item = array('line_number' => NULL, 'particular' => NULL, 'amount' => NULL);
+            $item = array('line_number' => NULL, 'particular' => NULL, 'amount' => NULL,'ref_no' => NULL,
+                'net_vat' => NULL, 'ewt' => NULL);
            $item['line_number'] = $line;
-           //$item['ref_no'] = $param['ref_no'][$line];
+           $item['ref_no'] = $param['ref_no'][$line];
+           $item['net_vat'] = $param['net_vat'][$line];
+           $item['ewt'] = $param['ewt'][$line];
            $item['particular'] = $param['particular'][$line]; 
            $item['amount'] = $param['amount'][$line];
            array_push($item_lines,$item);
@@ -758,9 +767,12 @@ class VoucherController extends BaseController{
        $item_lines = array();
         for($line = 0; $line < count($param['particular']); $line++){
            //$item = array('line_number' => NULL, 'ref_no' => NULL, 'item_desc' => NULL, 'item_amount' => NULL);
-            $item = array('line_number' => NULL, 'item_desc' => NULL, 'item_amount' => NULL);
+            $item = array('line_number' => NULL, 'item_desc' => NULL, 'item_amount' => NULL ,'ref_no' => NULL,
+                'net_vat' => NULL, 'ewt' => NULL);
            $item['line_number'] = $line;
-          // $item['ref_no'] = $param['ref_no'][$line];
+           $item['ref_no'] = $param['ref_no'][$line];
+           $item['net_vat'] = $param['net_vat'][$line];
+           $item['ewt'] = $param['ewt'][$line];
            $item['item_desc'] = $param['particular'][$line]; 
            $item['item_amount'] = $param['amount'][$line];
            array_push($item_lines,$item);
@@ -818,9 +830,21 @@ class VoucherController extends BaseController{
                     $query->with(array('receipt' => function($q){
                             $q->select('receipt_no', 'gross_amt', 'net_vat', 'ewt', 'particular_id');
                     }));
-                    $query->select('voucher_number','id','line_number','item_desc','item_amount');
+                    $query->select('voucher_number','id','line_number','item_desc','item_amount','ref_no');
                 }))->get(array('voucher_number'))->toArray();
         return View::make('forms.voucher_report_single')->with('data',$response);//Response::json($response);       
+    }
+    
+    public function getDetailed(){
+        $report = DB::table('vouchers')
+	->select(array('vouchers.voucher_number', 'vouchers.voucher_date', 'vouchers.check_number', 'vouchers.total_amount', 'business_partners.bp_name', 'users.username', DB::raw('(Select count(*) from voucher_Approval where voucher_number=vouchers.voucher_number and approved=1 group by voucher_number) as status'),
+            'voucher_items.item_desc', 'voucher_items.item_amount', 'voucher_items.ref_no', 'voucher_items.net_vat', 'voucher_items.ewt'))
+	->join('business_partners', 'vouchers.payto_id', '=', 'business_partners.bp_id')
+        ->join('users', 'vouchers.created_by', '=', 'users.id')
+        ->join('voucher_items', 'vouchers.voucher_number', '=', 'voucher_items.voucher_number')
+        ->orderBy('vouchers.voucher_number', 'asc')
+    	->get();
+        return Response::json($report);
     }
     
 }

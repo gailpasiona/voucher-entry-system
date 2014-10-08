@@ -48,9 +48,13 @@ class Voucher extends Eloquent {
            // static::$rules["ref_no.{$i}"] = 'alpha_num';
             static::$rules["particular.{$i}"] = 'required|alpha_spaces';
             static::$rules["amount.{$i}"] = 'required|amount';
-           // $att["ref_no.{$i}"] = "Reference for Item No. " . "{$line}";
+            static::$rules["net_vat.{$i}"] = 'amount';
+            static::$rules["ewt.{$i}"] = 'amount';
+            //$att["ref_no.{$i}"] = "Reference for Item No. " . "{$line}";
             $att["particular.{$i}"] = "Particular Description for Item No. " . "{$line}";
             $att["amount.{$i}"] = "Amount for Item No. " . "{$line}";
+            $att["net_vat.{$i}"] = "Vat for Item No. " . "{$line}";
+            $att["ewt.{$i}"] = "EWT for Item No. " . "{$line}";
         }
         }
         $validator = Validator::make($input, static::$rules);

@@ -726,3 +726,8 @@ body { padding-top: 100px; background-color: #f8f8f8;}
     cursor: inherit;
     display: block;
 }
+
+//modal window width
+#edit_modal .modal-dialog{
+    width: 60%;
+}

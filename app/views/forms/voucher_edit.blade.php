@@ -76,6 +76,7 @@
 @stop
 @section('styles')
     <link rel="stylesheet" href="{{ URL::asset('//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css')}}" />
+    <link rel="stylesheet" href="{{ URL::asset('css/forms.css')}}" />
 @stop
 
 @section('scripts')

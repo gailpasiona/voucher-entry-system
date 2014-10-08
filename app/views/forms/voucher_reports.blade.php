@@ -13,16 +13,17 @@
                     <label class="col-md-12">Filter</label>
                             <div class="form-group row">
                                     <div class="col-md-4">
-                                        <select class="form-control" name="report" id="report">                                        
-                                            <option value="1">Single Record</option>
-                                            <option value="2">All Records</option>
+                                        <select class="form-control" name="report" id="report">
+                                            <option value="0">Single Record</option>
+                                            <option value="1">Voucher Headers</option>
+                                            <option value="2">Detailed Vouchers</option>
                                         </select>
                                     </div>
                                     <div class="dyn_options" class="col-md-4">
                                         <div class="dyn_options_content col-md-4">
                                             <input class="form-control" placeholder="Voucher Number" type="text" name="voucher_number" id="voucher_number">
-                                        </div>
-                                        <div class="dyn_options_button col-md-4">
+                                        </div><!--
+-->                                        <div class="dyn_options_button col-md-4">
                                             <button type="button" id="queryReports" class="btn btn-primary btn-block queryReport">Load Report</button>
                                         </div>
                                     </div>
@@ -65,14 +66,18 @@
                var type = $('#report').val();
               
                switch(type){
-                    case '1':
+                    case '0':
                        $(".dyn_options_content").remove();
-                       //$(".dyn_options").append('<div class="dyn_options_content col-md-4">\n\
-                               //         <input class="form-control" placeholder="Voucher Number" type="text" class="voucher_number"></div>');
-                                     //   <div class="dyn_options_content col-md-4"><button type="button" class="btn btn-primary btn-block queryReport">Load Report</button</div>');
+//                       $(".dyn_options").append('<div class="dyn_options_content col-md-4">\n\
+//                                        <input class="form-control" placeholder="Voucher Number" type="text" class="voucher_number"></div>');
+                                        //<div class="dyn_options_content col-md-4"><button type="button" class="btn btn-primary btn-block queryReport">Load Report</button</div>');
                         $('<div class="dyn_options_content col-md-4">\n\
                                         <input class="form-control" placeholder="Voucher Number" type="text" class="voucher_number"></div>').insertBefore(".dyn_options_button");
                         console.log("appended");
+                       break;
+                   case '1':
+                       $(".dyn_options_content").remove();
+                        console.log("removed");
                        break;
                    case '2':
                        $(".dyn_options_content").remove();
@@ -83,6 +88,7 @@
         });
         
         $('.queryReport').click(function(){
+            var address = null;
 //             $.ajax({
 //                    url: "get_report",
 //                    dataType: "json"
@@ -92,73 +98,158 @@
             console.log("click");
             $('#report_table').remove();
             $('#report_area').append('<div id="report_table"><table id="table-vouchers"></table></div>');
+            var type = $('#report').val();
+            switch(type){
+                case '0':
+                    address = 'get_report';
+                    $('#table-vouchers').bootstrapTable({
+                        url: address,
+                        showRefresh: true,
+                        showColumns: true,
+                        search: true,
+                       //    showToggle: true,
+                        pagination: true,
+                        columns: [{
+                            field: 'voucher_number',
+                            title: 'Voucher Number',
+                            //align: 'right',
+                            sortable: true,
+                            width: 200/2
+                        }, {
+                            field: 'voucher_date',
+                            title: 'Voucher Date',
+                            //align: 'right',
+                            //valign: 'bottom',
+                            width: 200/4,
+                            sortable: true
+                        }, {
+                            field: 'total_amount',
+                            title: 'Amount',
+                            //align: 'right',
+                            //valign: 'bottom',
+                            width: 200/3,
+                            sortable: false
+                        }, {
+                            field: 'check_number',
+                            title: 'Cheque No',
+                            //align: 'right',
+                            //valign: 'bottom',
+                            width: 200/3,
+                            sortable: false
+                        }, {
+                            field: 'bp_name',
+                            title: 'Pay To',
+                            //align: 'right',
+                            //valign: 'bottom',
+                            width: 200/3,
+                            sortable: false
+                        }, {
+                            field: 'username',
+                            title: 'Created By',
+                            //align: 'right',
+                            //valign: 'bottom',
+                            width: 200/3,
+                            sortable: false
+                        },{
+                            field: 'status',
+                            title: 'Status',
+                            formatter: statusFormatter,
+                            //align: 'right',
+                            //valign: 'bottom',
+                            width: 200/3,
+                            sortable: false
+                        },{
+                            field: 'voucher_number',
+                            title: 'Info',
+                            formatter: urlFormatter,
+                            align: 'center',
+                            valign: 'center',
+                            width: 200/4,
+                            sortable: false
+                        }]
+                    });
+                    break;
+                case '1':
+                    address = 'get_header_report';
+                    break;
+                case '2':
+                    address = 'detailed_report';
+                    $('#table-vouchers').bootstrapTable({
+                        url: address,
+                        showRefresh: true,
+                        showColumns: true,
+                        search: true,
+                       //    showToggle: true,
+                        pagination: true,
+                        columns: [{
+                            field: 'voucher_number',
+                            title: 'Voucher Number',
+                            //align: 'right',
+                            sortable: true,
+                            width: 200/2
+                        }, {
+                            field: 'voucher_date',
+                            title: 'Voucher Date',
+                            //align: 'right',
+                            //valign: 'bottom',
+                            width: 200/4,
+                            sortable: true
+                        }, {
+                            field: 'total_amount',
+                            title: 'Amount',
+                            //align: 'right',
+                            //valign: 'bottom',
+                            width: 200/3,
+                            sortable: false
+                        }, {
+                            field: 'check_number',
+                            title: 'Cheque No',
+                            //align: 'right',
+                            //valign: 'bottom',
+                            width: 200/3,
+                            sortable: false
+                        }, {
+                            field: 'bp_name',
+                            title: 'Pay To',
+                            //align: 'right',
+                            //valign: 'bottom',
+                            width: 200/3,
+                            sortable: false
+                        },{
+                            field: 'item_desc',
+                            title: 'Description',
+                            //formatter: urlFormatter,
+                            align: 'center',
+                            valign: 'center',
+                            width: 200/4,
+                            sortable: false
+                        },{
+                            field: 'item_amount',
+                            title: 'Item Amount',
+                            align: 'center',
+                            valign: 'center',
+                            width: 200/4,
+                            sortable: false
+                        },{
+                            field: 'net_vat',
+                            title: 'VAT',
+                            align: 'center',
+                            valign: 'center',
+                            width: 200/4,
+                            sortable: false
+                        },{
+                            field: 'ewt',
+                            title: 'EWT',
+                            align: 'center',
+                            valign: 'center',
+                            width: 200/4,
+                            sortable: false
+                        }]
+                    });
+                    break;                    
+            }
+                
             
-            $('#table-vouchers').bootstrapTable({
-                url: 'get_report',
-                showRefresh: true,
-                showColumns: true,
-                search: true,
-               //    showToggle: true,
-                pagination: true,
-                columns: [{
-                    field: 'voucher_number',
-                    title: 'Voucher Number',
-                    //align: 'right',
-                    sortable: true,
-                    width: 200/2
-                }, {
-                    field: 'voucher_date',
-                    title: 'Voucher Date',
-                    //align: 'right',
-                    //valign: 'bottom',
-                    width: 200/4,
-                    sortable: true
-                }, {
-                    field: 'total_amount',
-                    title: 'Amount',
-                    //align: 'right',
-                    //valign: 'bottom',
-                    width: 200/3,
-                    sortable: false
-                }, {
-                    field: 'check_number',
-                    title: 'Cheque No',
-                    //align: 'right',
-                    //valign: 'bottom',
-                    width: 200/3,
-                    sortable: false
-                }, {
-                    field: 'bp_name',
-                    title: 'Pay To',
-                    //align: 'right',
-                    //valign: 'bottom',
-                    width: 200/3,
-                    sortable: false
-                }, {
-                    field: 'username',
-                    title: 'Created By',
-                    //align: 'right',
-                    //valign: 'bottom',
-                    width: 200/3,
-                    sortable: false
-                },{
-                    field: 'status',
-                    title: 'Status',
-                    formatter: statusFormatter,
-                    //align: 'right',
-                    //valign: 'bottom',
-                    width: 200/3,
-                    sortable: false
-                },{
-                    field: 'voucher_number',
-                    title: 'Info',
-                    formatter: urlFormatter,
-                    align: 'center',
-                    valign: 'center',
-                    width: 200/4,
-                    sortable: false
-                }]
-            });
 
     return false;
         });
