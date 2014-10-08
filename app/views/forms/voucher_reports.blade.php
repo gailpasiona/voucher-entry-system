@@ -101,6 +101,9 @@
             var type = $('#report').val();
             switch(type){
                 case '0':
+                    address = null;
+                    break;
+                case '1':
                     address = 'get_report';
                     $('#table-vouchers').bootstrapTable({
                         url: address,
@@ -168,9 +171,6 @@
                             sortable: false
                         }]
                     });
-                    break;
-                case '1':
-                    address = 'get_header_report';
                     break;
                 case '2':
                     address = 'detailed_report';
