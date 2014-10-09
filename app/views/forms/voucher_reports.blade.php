@@ -200,28 +200,28 @@
                             align: 'center',
                             //valign: 'bottom',
                             width: 200/3,
-                            sortable: false
+                            sortable: true
                         }, {
                             field: 'check_number',
                             title: 'Cheque No',
                             align: 'center',
                             //valign: 'bottom',
                             width: 200/3,
-                            sortable: false
+                            sortable: true
                         },{
                             field: 'check_date',
                             title: 'Cheque Date',
                             align: 'center',
                             //valign: 'bottom',
                             width: 200/3,
-                            sortable: false
+                            sortable: true
                         }, {
                             field: 'bp_name',
                             title: 'Pay To',
                             align: 'center',
                             //valign: 'bottom',
                             width: 200/3,
-                            sortable: false
+                            sortable: true
                         },{
                             field: 'item_desc',
                             title: 'Description',
