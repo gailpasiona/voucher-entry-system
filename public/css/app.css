@@ -151,6 +151,7 @@ body { padding-top: 100px; background-color: #f8f8f8;}
         max-height: 300px;
         overflow-y: scroll;
     }
+    
 }
 
 @media(max-height:400px) and (max-width:767px) {
@@ -158,6 +159,7 @@ body { padding-top: 100px; background-color: #f8f8f8;}
         max-height: 200px;
         overflow-y: scroll;
     }
+    
 }
 
 /* Buttons */
@@ -728,6 +730,6 @@ body { padding-top: 100px; background-color: #f8f8f8;}
 }
 
 //modal window width
-#edit_modal .modal-dialog{
+/*#edit_modal .modal-dialog{
     width: 60%;
-}
+}*/
