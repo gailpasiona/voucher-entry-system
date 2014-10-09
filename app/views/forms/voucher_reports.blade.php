@@ -208,6 +208,13 @@
                             //valign: 'bottom',
                             width: 200/3,
                             sortable: false
+                        },{
+                            field: 'check_date',
+                            title: 'Cheque Date',
+                            align: 'center',
+                            //valign: 'bottom',
+                            width: 200/3,
+                            sortable: false
                         }, {
                             field: 'bp_name',
                             title: 'Pay To',

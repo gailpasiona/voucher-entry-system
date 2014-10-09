@@ -837,7 +837,7 @@ class VoucherController extends BaseController{
     
     public function getDetailed(){
         $report = DB::table('vouchers')
-	->select(array('vouchers.voucher_number', 'vouchers.voucher_date', 'vouchers.check_number', 'vouchers.total_amount', 'business_partners.bp_name', 'users.username', DB::raw('(Select count(*) from voucher_Approval where voucher_number=vouchers.voucher_number and approved=1 group by voucher_number) as status'),
+	->select(array('vouchers.voucher_number', 'vouchers.voucher_date', 'vouchers.check_number', 'vouchers.check_date', 'vouchers.total_amount', 'business_partners.bp_name', 'users.username', DB::raw('(Select count(*) from voucher_Approval where voucher_number=vouchers.voucher_number and approved=1 group by voucher_number) as status'),
             'voucher_items.item_desc', 'voucher_items.item_amount', 'voucher_items.ref_no', 'voucher_items.net_vat', 'voucher_items.ewt'))
 	->join('business_partners', 'vouchers.payto_id', '=', 'business_partners.bp_id')
         ->join('users', 'vouchers.created_by', '=', 'users.id')
